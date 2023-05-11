@@ -99,7 +99,7 @@ void set_vector_by_opcode_xy(unsigned char xy)
     y += corner % 2 == 1 ? 15 : 0;
     x += corner >= 2 ? 15 : 0;
     y += quad >= 8 ? 16 : 0;
-    x += (quad == 0 || quad == 9) ? 16 : 0;
+    x += (quad == 0 || quad == 12) ? 16 : 0;
 
     s_canvas.x_pos = x;
     s_canvas.y_pos = y;
