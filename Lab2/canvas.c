@@ -9,6 +9,8 @@
 
 static canvas_t s_canvas;
 
+unsigned char* g_palette;
+
 void set_vector_by_opcode_xy(unsigned char xy);
 
 void set_canvas(unsigned char* canvas32x32)
