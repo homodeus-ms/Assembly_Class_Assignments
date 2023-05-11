@@ -8,14 +8,14 @@
 #define FALSE (0)
 
 static canvas_t s_canvas;
-const unsigned char* g_palette;
+
 void set_vector_by_opcode_xy(unsigned char xy);
 
 void set_canvas(unsigned char* canvas32x32)
 {
-    s_canvas.mCanvas = canvas32x32;
-    s_canvas.mX = 0;
-    s_canvas.mY = 0;
+    s_canvas.canvas = canvas32x32;
+    s_canvas.x_pos = 0;
+    s_canvas.y_pos = 0;
 
     return;
 }
@@ -23,66 +23,68 @@ void set_canvas(unsigned char* canvas32x32)
 void execute(unsigned char instruction)
 {
     opcode_t opcode = instruction >> 5;
-    unsigned char operand = instruction & 0x1f;
+    unsigned char operand = instruction & 0b00011111;
     unsigned char i = 0;
     unsigned char j = 0;
-    unsigned char color = *(g_palette + operand);
+    unsigned char* color;
     unsigned char pendown;
     unsigned char dirX;
     unsigned char dirY;
 
     switch (opcode) {
     case OPCODE_CLEAR:
+
+        color = g_palette + operand;
+
         for (i = 0; i < MAX_SIZE; ++i) {
             for (j = 0; j < MAX_SIZE; ++j) {
-                s_canvas.mCanvas[j * MAX_SIZE + i] = color;
+                s_canvas.canvas[j * MAX_SIZE + i] = *color;
             }
         }
         break;
     case OPCODE_SET_PALETTE:
-        g_palette = get_palette(operand);
         break;
     case OPCODE_SET_X:
-        s_canvas.mX = operand;
+        s_canvas.x_pos = operand;
         break;
     case OPCODE_SET_Y:
-        s_canvas.mY = operand;
+        s_canvas.y_pos = operand;
         break;
     case OPCODE_DRAW_COLOR:
-        color = *(g_palette + operand);
-        s_canvas.mCanvas[s_canvas.mY * MAX_SIZE + s_canvas.mX] = color;
+        color = g_palette + operand;
+        s_canvas.canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *color;
         break;
     case OPCODE_SET_BRUSH:
-        s_canvas.mBrushColor = *(g_palette + operand);
+        s_canvas.brush_color = *(g_palette + operand);
         break;
     case OPCODE_SET_XY:
         set_vector_by_opcode_xy(operand);
         break;
     case OPCODE_SET_MOV:
-        pendown = (operand & 0x10) >> 4;
-        dirX = (operand & 0xc) >> 2;
-        dirY = operand & 0x3;
+        pendown = (operand & 0b10000) >> 4;
+        dirX = (operand & 0b01100) >> 2;
+        dirY = operand & 0b011;
 
         if (pendown == TRUE)
         {
-            s_canvas.mCanvas[s_canvas.mY * MAX_SIZE + s_canvas.mX] = s_canvas.mBrushColor;
+            s_canvas.canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = s_canvas.brush_color;
         }
 
         if (dirX > 0)
         {
-            s_canvas.mX += dirX % 2 == 1 ? 1 : -1;
-            s_canvas.mX = s_canvas.mX < 0 ? 31 : s_canvas.mX;
-            s_canvas.mX = s_canvas.mX == 32 ? 0 : s_canvas.mX;
+            s_canvas.x_pos += dirX % 2 == 1 ? 1 : -1;
+            s_canvas.x_pos = s_canvas.x_pos < 0 ? 31 : s_canvas.x_pos;
+            s_canvas.x_pos = s_canvas.x_pos == 32 ? 0 : s_canvas.x_pos;
         }
         if (dirY > 0)
         {
-            s_canvas.mY += dirY % 2 == 1 ? -1 : 1;
-            s_canvas.mY = s_canvas.mY < 0 ? 31 : s_canvas.mY;
-            s_canvas.mY = s_canvas.mY == 32 ? 0 : s_canvas.mY;
+            s_canvas.y_pos += dirY % 2 == 1 ? -1 : 1;
+            s_canvas.y_pos = s_canvas.y_pos < 0 ? 31 : s_canvas.y_pos;
+            s_canvas.y_pos = s_canvas.y_pos == 32 ? 0 : s_canvas.y_pos;
         }
         if (pendown == TRUE)
         {
-            s_canvas.mCanvas[s_canvas.mY * MAX_SIZE + s_canvas.mX] = s_canvas.mBrushColor;
+            s_canvas.canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = s_canvas.brush_color;
         }
 
         break;
@@ -95,15 +97,15 @@ void set_vector_by_opcode_xy(unsigned char xy)
 {
     unsigned char x = 0;
     unsigned char y = 0;
-    xy &= 0xf;
-    unsigned quad = (xy & 0xc);
-    unsigned corner = (xy & 0x3);
+    xy &= 0b01111;
+    unsigned quad = (xy & 0b01100);
+    unsigned corner = (xy & 0b011);
 
     y += corner % 2 == 1 ? 15 : 0;
     x += corner >= 2 ? 15 : 0;
     y += quad >= 8 ? 16 : 0;
     x += (quad == 0 || quad == 9) ? 16 : 0;
 
-    s_canvas.mX = x;
-    s_canvas.mY = y;
+    s_canvas.x_pos = x;
+    s_canvas.y_pos = y;
 }

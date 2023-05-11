@@ -13,13 +13,13 @@ typedef enum opcode {
 } opcode_t;
 
 typedef struct canvas {
-    unsigned char* mCanvas;
-    signed char mX;
-    signed char mY;
-    unsigned char mBrushColor;
-    unsigned char mPendown;
+    unsigned char* canvas;
+    signed char x_pos;
+    signed char y_pos;
+    unsigned char brush_color;
+    unsigned char pendown;
     
-}canvas_t;
+} canvas_t;
 
 void set_canvas(unsigned char* canvas32x32);
 

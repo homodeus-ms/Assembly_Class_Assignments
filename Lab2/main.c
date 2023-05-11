@@ -31,7 +31,7 @@ int main(void)
     execute(GET_INSTRUCTION(OPCODE_CLEAR, color_index));
 
 
-#if 0
+#if 1
     printf("canvas color: %#x\n", canvas[5]);
     for (int i = 0; i < MAX_SIZE; ++i) {
         for (int j = 0; j < MAX_SIZE; ++j) {
