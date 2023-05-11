@@ -44,7 +44,6 @@ unsigned char* g_palette;
 const unsigned char* get_palette(unsigned char id)
 {
     assert(id < PALETTE_SIZE);
-    g_palette = s_palette[id];
     
     return s_palette[id];
 }
