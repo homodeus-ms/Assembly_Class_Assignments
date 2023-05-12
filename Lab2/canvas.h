@@ -16,6 +16,7 @@ typedef struct canvas {
     unsigned char* canvas;
     signed char x_pos;
     signed char y_pos;
+    const unsigned char* p_brush;
     unsigned char palette_id;
     unsigned char pendown;
     
