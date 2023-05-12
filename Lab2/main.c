@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 
 #include "canvas.h"
 #include "palette.h"
@@ -25,93 +26,46 @@ int main(void)
     unsigned char palette_index = 0;
     unsigned char color_index = 20;
 
-    unsigned char* palette = get_palette(palette_index);
+    const unsigned char* palette = get_palette(palette_index);
     unsigned char color = palette[color_index];
 
-    execute(GET_INSTRUCTION(OPCODE_CLEAR, color_index));
+    execute(GET_INSTRUCTION(0b000, color_index));
 
+    execute(0b11110110);
 
-#if 1
-    printf("canvas color: %#x\n", canvas[5]);
-    for (int i = 0; i < MAX_SIZE; ++i) {
-        for (int j = 0; j < MAX_SIZE; ++j) {
-            assert(canvas[j * MAX_SIZE + i] == color);
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 1));
+
+    execute(0b11111001);
+
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 31; ++j) {
+            printf("%#x ", canvas[j * MAX_SIZE + i]);
         }
+        printf("\n");
     }
-    palette_index = 5;
-    color_index = 1;
-    palette = get_palette(palette_index);
-    color = palette[color_index];
-    execute(GET_INSTRUCTION(OPCODE_CLEAR, color_index));
+    puts("");
 
-    printf("canvas_color2: %#x\n", canvas[5]);
+    unsigned char canvas2[MAX_SIZE * MAX_SIZE];
+    set_canvas(canvas2);
+    palette_index = 1;
+    color_index = 0;
 
-#endif
-
-#if 1
-
-    palette_index = 27;
-    color_index = 19;
-
-    palette = get_palette(palette_index);
-    color = palette[color_index];
-
-    unsigned char x = 7;
-    unsigned char y = 12;
-    
     execute(GET_INSTRUCTION(OPCODE_SET_PALETTE, palette_index));
-    
-    execute(GET_INSTRUCTION(OPCODE_SET_X, x));
-    execute(GET_INSTRUCTION(OPCODE_SET_Y, y));
 
-    execute(GET_INSTRUCTION(OPCODE_DRAW_COLOR, color_index));
-    
-    assert(canvas[y * MAX_SIZE + x] == color);
-#endif
-
-#if 1
-    unsigned char xy = 0b01001;
-
-    execute(GET_INSTRUCTION(OPCODE_SET_XY, xy));
-
-    color_index = 3;
-    color = palette[color_index];
-    
-    execute(GET_INSTRUCTION(OPCODE_DRAW_COLOR, color_index));
-
-    x = 0;
-    y = 31;
-    
-    assert(canvas[y * MAX_SIZE + x] == color);
-
-#endif
-
-#if 1
-    color_index = 11;
+    palette = get_palette(palette_index);
     color = palette[color_index];
 
-    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, color_index));
-    execute(GET_INSTRUCTION(OPCODE_MOV, 0b10010));
+    execute(GET_INSTRUCTION(0b000, color_index));
 
-    y = 0;
-    printf("color: %#x\n", color);
-    printf("y * MAX_SIZE + x : %#x\n", canvas[y * MAX_SIZE + x]);
-    assert(canvas[y * MAX_SIZE + x] == color);
+    execute(0b11110110);
 
-    execute(GET_INSTRUCTION(OPCODE_MOV, 0b00110));
-
-    ++x;
-    ++y;
-
-    assert(canvas[y * MAX_SIZE + x] != color);
-    printf("color: %#x\n", color);
-
-    execute(GET_INSTRUCTION(OPCODE_MOV, 0b10110));
-
-    assert(canvas[y * MAX_SIZE + x] == color);
-    assert(canvas[(y + 1) * MAX_SIZE + (x + 1)] == color);
-
-#endif
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 31; ++j) {
+            printf("%#x ", canvas2[j * MAX_SIZE + i]);
+        }
+        printf("\n");
+    }
+    puts("");
 
     printf("NoAssert!\n");
 
