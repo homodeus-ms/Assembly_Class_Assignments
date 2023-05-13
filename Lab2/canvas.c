@@ -1,11 +1,10 @@
 #include "canvas.h"
 #include "palette.h"
 
-#include <stdio.h>
-
 #define MAX_SIZE (32)
 #define TRUE (1)
 #define FALSE (0)
+#define NULL (0)
 
 static unsigned char* s_canvas = NULL;
 
@@ -92,9 +91,6 @@ void execute(unsigned char instruction)
         printf("INVALID OPCODE!\n");
         break;
     }
-
-    printf("x_pos: %d ", s_x_pos);
-    printf("y_pos: %d\n", s_y_pos);
 }
 void set_vector_by_opcode_xy(unsigned char xy, signed char* x_pos, signed char* y_pos)
 {
