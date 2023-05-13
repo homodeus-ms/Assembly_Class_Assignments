@@ -6,26 +6,26 @@
 #define TRUE (1)
 #define FALSE (0)
 
-static unsigned char* s_canvas = NULL;
+static canvas_t s_canvas = { 0, };
 
 void set_vector_by_opcode_xy(unsigned char xy, signed char* x_pos, signed char* y_pos);
 
 void set_canvas(unsigned char* canvas32x32)
 {
-    s_canvas = canvas32x32;
+    s_canvas.m_canvas = canvas32x32;
     
     return;
 }
 
 void execute(unsigned char instruction)
 {
+    static const unsigned char* s_p_brush = NULL;
     static signed char s_x_pos = 0;
     static signed char s_y_pos = 0;
-    static const unsigned char* s_p_brush = NULL;
     static unsigned char s_palette_id = 0;
-    if (s_p_brush == NULL) {
-        s_p_brush = get_palette(0);
-    }
+    
+    s_p_brush = get_palette(s_palette_id);
+    
 
     opcode_t opcode = instruction >> 5;
     unsigned char operand = instruction & 0b00011111;
@@ -43,7 +43,7 @@ void execute(unsigned char instruction)
 
         for (i = 0; i < MAX_SIZE; ++i) {
             for (j = 0; j < MAX_SIZE; ++j) {
-                s_canvas[j * MAX_SIZE + i] = *p_color;
+                s_canvas.m_canvas[j * MAX_SIZE + i] = *p_color;
             }
         }
         break;
@@ -58,7 +58,7 @@ void execute(unsigned char instruction)
         break;
     case OPCODE_DRAW_COLOR:
         p_color = get_palette(s_palette_id) + operand;
-        s_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *p_color;
+        s_canvas.m_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *p_color;
         break;
     case OPCODE_SET_BRUSH:
         s_p_brush = get_palette(s_palette_id) + operand;
@@ -72,7 +72,7 @@ void execute(unsigned char instruction)
         y_dir = operand & 0b011;
         
         if (pendown == TRUE) {
-            s_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *(s_p_brush);
+            s_canvas.m_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *(s_p_brush);
         }
 
         if (x_dir > 0) {
@@ -86,7 +86,7 @@ void execute(unsigned char instruction)
             s_y_pos = s_y_pos == 32 ? 0 : s_y_pos;
         }
         if (pendown == TRUE) {
-            s_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *(s_p_brush);
+            s_canvas.m_canvas[s_y_pos * MAX_SIZE + s_x_pos] = *(s_p_brush);
         }
 
         break;

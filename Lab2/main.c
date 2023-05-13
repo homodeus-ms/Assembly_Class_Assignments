@@ -36,26 +36,18 @@ int main(void)
 
     set_canvas(canvas);
 
-    execute(GET_INSTRUCTION(OPCODE_CLEAR, 5));
-    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 3));
-    execute(GET_INSTRUCTION(OPCODE_MOV, 0b11110110));
-
+    execute(GET_INSTRUCTION(OPCODE_CLEAR, 1));
     print_canvas(canvas);
-
-    unsigned char canvas2[MAX_SIZE * MAX_SIZE];
-
-    set_canvas(canvas2);
-
-    execute(GET_INSTRUCTION(OPCODE_CLEAR, 0));
-    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 1));
-    execute(GET_INSTRUCTION(OPCODE_MOV, 0b11110110));
-
-    print_canvas(canvas2);
-
-
-    printf("NoAssert!\n");
-
-
-    return 0;
+    execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
+    print_canvas(canvas);
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 2));
+    execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
+    print_canvas(canvas);
+    execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
+    print_canvas(canvas);
+    
+    printf("No Assert\n");
 }
+
+
 
