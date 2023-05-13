@@ -1,5 +1,6 @@
 #include "canvas.h"
 #include "palette.h"
+#include <stdio.h>
 
 #define MAX_SIZE (32)
 #define TRUE (1)
