@@ -17,11 +17,11 @@
 
 #define GET_INSTRUCTION(opcode, operand) (((opcode) << 5) | (operand))
 
-void print_canvas(unsigned char canvas[])
+void print_canvas(unsigned char* canvas)
 {
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 5; ++i)
     {
-        for (int j = 0; j < 10; ++j)
+        for (int j = 0; j < 5; ++j)
         {
             printf("%#x ", canvas[j * MAX_SIZE + i]);
         }
@@ -40,13 +40,23 @@ int main(void)
     print_canvas(canvas);
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
-    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 2));
+
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 0b10));
+    print_canvas(canvas);
+
+
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
+
+
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
+
+
     
     printf("No Assert\n");
+
+    return 0;
 }
 
 

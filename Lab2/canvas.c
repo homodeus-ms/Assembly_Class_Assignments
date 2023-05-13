@@ -13,9 +13,7 @@ void set_vector_by_opcode_xy(unsigned char xy);
 void set_canvas(unsigned char* canvas32x32)
 {
     s_canvas.m_canvas = canvas32x32;
-    if (s_canvas.p_brush == NULL) {
-        s_canvas.p_brush = get_palette(0);
-    }
+    s_canvas.p_brush = get_palette(s_canvas.palette_id);
     
     return;
 }
@@ -72,12 +70,12 @@ void execute(unsigned char instruction)
 
         if (x_dir > 0) {
             s_canvas.x_pos += x_dir % 2 == 1 ? 1 : -1;
-            s_canvas.x_pos = s_canvas.x_pos < 0 ? 31 : s_canvas.x_pos;
+            s_canvas.x_pos = s_canvas.x_pos == 0xff ? 31 : s_canvas.x_pos;
             s_canvas.x_pos = s_canvas.x_pos == 32 ? 0 : s_canvas.x_pos;
         }
         if (y_dir > 0) {
             s_canvas.y_pos += y_dir % 2 == 1 ? -1 : 1;
-            s_canvas.y_pos = s_canvas.y_pos < 0 ? 31 : s_canvas.y_pos;
+            s_canvas.y_pos = s_canvas.y_pos == 0xff ? 31 : s_canvas.y_pos;
             s_canvas.y_pos = s_canvas.y_pos == 32 ? 0 : s_canvas.y_pos;
         }
         if (pendown == TRUE) {
