@@ -17,57 +17,45 @@
 
 #define GET_INSTRUCTION(opcode, operand) (((opcode) << 5) | (operand))
 
+void print_canvas(unsigned char canvas[])
+{
+    for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 10; ++j)
+        {
+            printf("%#x ", canvas[j * MAX_SIZE + i]);
+        }
+        puts("");
+    }
+    puts("");
+}
+
 int main(void)
 {
     unsigned char canvas[MAX_SIZE * MAX_SIZE];
 
     set_canvas(canvas);
 
-    unsigned char palette_index = 0;
-    unsigned char color_index = 20;
+    execute(GET_INSTRUCTION(OPCODE_CLEAR, 5));
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 3));
+    execute(GET_INSTRUCTION(OPCODE_MOV, 0b11110110));
 
-    const unsigned char* palette = get_palette(palette_index);
-    unsigned char color = palette[color_index];
-
-    execute(GET_INSTRUCTION(0b000, color_index));
-
-    execute(0b11110110);
-
-    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 1));
-
-    execute(0b11111001);
-
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 31; ++j) {
-            printf("%#x ", canvas[j * MAX_SIZE + i]);
-        }
-        printf("\n");
-    }
-    puts("");
+    print_canvas(canvas);
 
     unsigned char canvas2[MAX_SIZE * MAX_SIZE];
+
     set_canvas(canvas2);
-    palette_index = 1;
-    color_index = 0;
 
-    execute(GET_INSTRUCTION(OPCODE_SET_PALETTE, palette_index));
+    execute(GET_INSTRUCTION(OPCODE_CLEAR, 0));
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 1));
+    execute(GET_INSTRUCTION(OPCODE_MOV, 0b11110110));
 
-    palette = get_palette(palette_index);
-    color = palette[color_index];
+    print_canvas(canvas2);
 
-    execute(GET_INSTRUCTION(0b000, color_index));
-
-    execute(0b11110110);
-
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 31; ++j) {
-            printf("%#x ", canvas2[j * MAX_SIZE + i]);
-        }
-        printf("\n");
-    }
-    puts("");
 
     printf("NoAssert!\n");
 
+
     return 0;
 }
+

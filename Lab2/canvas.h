@@ -12,14 +12,6 @@ typedef enum opcode {
     OPCODE_SET_MOV = 0b111,
 } opcode_t;
 
-typedef struct canvas {
-    unsigned char* canvas;
-    const unsigned char* p_brush;
-    unsigned char palette_id;
-    unsigned char pendown;
-    
-} canvas_t;
-
 void set_canvas(unsigned char* canvas32x32);
 
 void execute(unsigned char instruction);
