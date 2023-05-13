@@ -21,8 +21,8 @@ void set_canvas(unsigned char* canvas32x32)
 
 void execute(unsigned char instruction)
 {
-    static signed char x_pos;
-    static signed char y_pos;
+    static signed char x_pos = 0;
+    static signed char y_pos = 0;
 
     opcode_t opcode = instruction >> 5;
     unsigned char operand = instruction & 0b00011111;
