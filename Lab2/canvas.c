@@ -5,7 +5,6 @@
 #define MAX_SIZE (32)
 #define TRUE (1)
 #define FALSE (0)
-#define NULL (0)
 
 static unsigned char* s_canvas = NULL;
 
@@ -22,8 +21,11 @@ void execute(unsigned char instruction)
 {
     static signed char s_x_pos = 0;
     static signed char s_y_pos = 0;
-    static const unsigned char* s_p_brush;
+    static const unsigned char* s_p_brush = NULL;
     static unsigned char s_palette_id = 0;
+    if (s_p_brush == NULL) {
+        s_p_brush = get_palette(0);
+    }
 
     opcode_t opcode = instruction >> 5;
     unsigned char operand = instruction & 0b00011111;
