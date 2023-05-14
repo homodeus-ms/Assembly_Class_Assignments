@@ -72,9 +72,10 @@ void execute(unsigned char instruction)
         pendown = (operand & 0b10000) >> 4;
         x_dir = (operand & 0b01100) >> 2;
         y_dir = operand & 0b011;
-        
+        p_color = get_palette(s_canvas.palette_idx) + s_canvas.color_idx;
+
         if (pendown == TRUE) {
-            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *(s_canvas.p_brush);
+            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         }
 
         if (x_dir > 0) {
@@ -88,7 +89,7 @@ void execute(unsigned char instruction)
             s_canvas.y_pos = s_canvas.y_pos == 32 ? 0 : s_canvas.y_pos;
         }
         if (pendown == TRUE) {
-            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *(s_canvas.p_brush);
+            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         }
 
         break;

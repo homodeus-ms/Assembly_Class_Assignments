@@ -36,19 +36,27 @@ int main(void)
 
     set_canvas(canvas);
 
-    execute(GET_INSTRUCTION(OPCODE_CLEAR, 1));
+    execute(GET_INSTRUCTION(OPCODE_CLEAR, 0));
     print_canvas(canvas);
 
-#if 1
+    execute(GET_INSTRUCTION(OPCODE_SET_PALETTE, 1));
+    execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 2));
+    execute(GET_INSTRUCTION(OPCODE_SET_PALETTE, 2));
+
+    execute(GET_INSTRUCTION(OPCODE_MOV, 0b10110));
+
+    print_canvas(canvas);
+
+#if 0
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
 #endif
-#if 1
+#if 0
     execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 0b10));
     print_canvas(canvas);
 
 #endif
-#if 1
+#if 0
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
 
