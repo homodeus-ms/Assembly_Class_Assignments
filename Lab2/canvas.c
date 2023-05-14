@@ -14,8 +14,7 @@ void set_canvas(unsigned char* canvas32x32)
 {
     s_canvas.m_canvas = canvas32x32;
     
-    if (s_canvas.p_palette == NULL)
-    {
+    if (s_canvas.p_palette == NULL) {
         s_canvas.p_palette = get_palette(0);
     }
     if (s_canvas.p_brush == NULL) {
@@ -57,7 +56,8 @@ void execute(unsigned char instruction)
         s_canvas.y_pos = operand;
         break;
     case OPCODE_DRAW_COLOR:
-        p_color = s_canvas.p_palette + operand;
+        s_canvas.color_idx = operand;
+        p_color = s_canvas.p_palette + s_canvas.color_idx;
         s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         break;
     case OPCODE_SET_BRUSH:
