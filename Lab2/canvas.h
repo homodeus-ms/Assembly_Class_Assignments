@@ -19,7 +19,7 @@ typedef struct canvas {
     unsigned char x_pos;
     unsigned char y_pos;
     unsigned char color_idx;
-    unsigned char palette_idx;
+    unsigned char palette_id;
 } canvas_t;
 void set_canvas(unsigned char* canvas32x32);
 

@@ -13,14 +13,8 @@ void set_vector_by_opcode_xy(unsigned char xy);
 void set_canvas(unsigned char* canvas32x32)
 {
     s_canvas.m_canvas = canvas32x32;
-    
-    if (s_canvas.p_palette == NULL) {
-        s_canvas.p_palette = get_palette(0);
-    }
-    if (s_canvas.p_brush == NULL) {
-        s_canvas.p_brush = get_palette(0);
-    }
-    
+    s_canvas.p_brush = get_palette(s_canvas.palette_id);
+
     return;
 }
 
@@ -34,11 +28,11 @@ void execute(unsigned char instruction)
     unsigned char pendown;
     unsigned char x_dir;
     unsigned char y_dir;
-    
+
     switch (opcode) {
     case OPCODE_CLEAR:
-        s_canvas.color_idx = operand;
-        p_color = get_palette(s_canvas.palette_idx) + operand;
+
+        p_color = get_palette(s_canvas.palette_id) + operand;
 
         for (i = 0; i < MAX_SIZE; ++i) {
             for (j = 0; j < MAX_SIZE; ++j) {
@@ -47,7 +41,7 @@ void execute(unsigned char instruction)
         }
         break;
     case OPCODE_SET_PALETTE:
-        s_canvas.palette_idx = operand;
+        s_canvas.palette_id = operand;
         break;
     case OPCODE_SET_X:
         s_canvas.x_pos = operand;
@@ -56,26 +50,22 @@ void execute(unsigned char instruction)
         s_canvas.y_pos = operand;
         break;
     case OPCODE_DRAW_COLOR:
-        s_canvas.color_idx = operand;
-        p_color = get_palette(s_canvas.palette_idx) + s_canvas.color_idx;
+        p_color = get_palette(s_canvas.palette_id) + operand;
         s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         break;
     case OPCODE_SET_BRUSH:
-        s_canvas.color_idx = operand;
-        s_canvas.p_brush = get_palette(s_canvas.palette_idx) + s_canvas.color_idx;
+        s_canvas.p_brush = get_palette(s_canvas.palette_id) + operand;
         break;
     case OPCODE_SET_XY:
         set_vector_by_opcode_xy(operand);
         break;
     case OPCODE_SET_MOV:
-        
         pendown = (operand & 0b10000) >> 4;
         x_dir = (operand & 0b01100) >> 2;
         y_dir = operand & 0b011;
-        p_color = get_palette(s_canvas.palette_idx) + s_canvas.color_idx;
 
         if (pendown == TRUE) {
-            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
+            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *(s_canvas.p_brush);
         }
 
         if (x_dir > 0) {
@@ -89,7 +79,7 @@ void execute(unsigned char instruction)
             s_canvas.y_pos = s_canvas.y_pos == 32 ? 0 : s_canvas.y_pos;
         }
         if (pendown == TRUE) {
-            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
+            s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *(s_canvas.p_brush);
         }
 
         break;
