@@ -60,8 +60,8 @@ void execute(unsigned char instruction)
         s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         break;
     case OPCODE_SET_BRUSH:
+        s_canvas.p_brush = s_canvas.p_palette - s_canvas.color_idx + operand;
         s_canvas.color_idx = operand;
-        s_canvas.p_brush = s_canvas.p_palette[0] + s_canvas.color_idx;
         break;
     case OPCODE_SET_XY:
         set_vector_by_opcode_xy(operand);
