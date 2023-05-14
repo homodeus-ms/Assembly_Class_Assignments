@@ -7,13 +7,20 @@
 #define FALSE (0)
 
 static canvas_t s_canvas;
+static const unsigned char* s_palette;
 
 void set_vector_by_opcode_xy(unsigned char xy);
 
 void set_canvas(unsigned char* canvas32x32)
 {
     s_canvas.m_canvas = canvas32x32;
-    s_canvas.p_brush = get_palette(s_canvas.palette_id);
+    if (s_palette == NULL) {
+        s_palette = get_palette(0);
+    }
+    if (s_canvas.p_brush == NULL) {
+        s_canvas.p_brush = get_palette(0);
+    }
+    //s_canvas.p_brush = get_palette(s_canvas.palette_id);
     
     return;
 }
@@ -32,7 +39,7 @@ void execute(unsigned char instruction)
     switch (opcode) {
     case OPCODE_CLEAR:
 
-        p_color = get_palette(s_canvas.palette_id) + operand;
+        p_color = s_palette + operand;
 
         for (i = 0; i < MAX_SIZE; ++i) {
             for (j = 0; j < MAX_SIZE; ++j) {
@@ -41,7 +48,7 @@ void execute(unsigned char instruction)
         }
         break;
     case OPCODE_SET_PALETTE:
-        s_canvas.palette_id = operand;
+        s_palette = get_palette(operand);
         break;
     case OPCODE_SET_X:
         s_canvas.x_pos = operand;
@@ -50,16 +57,17 @@ void execute(unsigned char instruction)
         s_canvas.y_pos = operand;
         break;
     case OPCODE_DRAW_COLOR:
-        p_color = get_palette(s_canvas.palette_id) + operand;
+        p_color = s_palette + operand;
         s_canvas.m_canvas[s_canvas.y_pos * MAX_SIZE + s_canvas.x_pos] = *p_color;
         break;
     case OPCODE_SET_BRUSH:
-        s_canvas.p_brush = get_palette(s_canvas.palette_id) + operand;
+        s_canvas.p_brush = s_palette + operand;
         break;
     case OPCODE_SET_XY:
         set_vector_by_opcode_xy(operand);
         break;
     case OPCODE_SET_MOV:
+
         pendown = (operand & 0b10000) >> 4;
         x_dir = (operand & 0b01100) >> 2;
         y_dir = operand & 0b011;
