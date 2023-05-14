@@ -15,10 +15,10 @@ typedef enum opcode {
 typedef struct canvas {
     unsigned char* m_canvas;
     const unsigned char* p_brush;
-    
+    const unsigned char* p_palette;
     unsigned char x_pos;
     unsigned char y_pos;
-    unsigned char palette_id;
+    unsigned char color_idx;
     unsigned char unused;
 } canvas_t;
 void set_canvas(unsigned char* canvas32x32);
