@@ -38,21 +38,26 @@ int main(void)
 
     execute(GET_INSTRUCTION(OPCODE_CLEAR, 1));
     print_canvas(canvas);
+
+#if 1
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
-
+#endif
+#if 1
     execute(GET_INSTRUCTION(OPCODE_SET_BRUSH, 0b10));
     print_canvas(canvas);
 
-
+#endif
+#if 1
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
 
-
+#endif
+#if 0
     execute(GET_INSTRUCTION(OPCODE_SET_MOV, 0b10110));
     print_canvas(canvas);
 
-
+#endif
     
     printf("No Assert\n");
 
