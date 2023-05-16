@@ -4,7 +4,7 @@
 #include "disassembler.h"
 
 #define ARR_SIZE (16)
-#define MNEM_LENGTH (3)
+#define MNEMONIC_LENGTH (3)
 #define MODE_MAX_LENGTH (7)
 
 #define PRINT(hex, mnemo, mode, h, l) sprintf(out_buffer64, "OPCODE=%02X[%s %s] OPERAND=%s %s", hex, mnemo, mode, h, l)
@@ -58,10 +58,8 @@ const unsigned char* disassemble(char* out_buffer64, const unsigned char* mem)
         return result;
     }
 
-    mnemonic[0] = opcode[0];
-    mnemonic[1] = opcode[1];
-    mnemonic[2] = opcode[2];
-    mnemonic[3] = '\0';
+    strncpy(mnemonic, opcode, MNEMONIC_LENGTH);
+    mnemonic[MNEMONIC_LENGTH] = '\0';
     
     strcpy(mode, opcode + 4);
 
