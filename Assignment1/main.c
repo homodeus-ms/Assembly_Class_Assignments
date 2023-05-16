@@ -18,7 +18,7 @@ int main(void)
 
 	const unsigned char* next = disassemble(buffer, mem);
 
-#if 0
+#if 1
 	check(mem, next, buffer);
 
 	next = disassemble(buffer, next);
@@ -35,7 +35,7 @@ int main(void)
 
 #endif
 
-#if 1
+#if 0
 	assert(next == mem + 1);
 	assert(strcmp("OPCODE=18[clc i] OPERAND=.. ..", buffer) == 0);
 

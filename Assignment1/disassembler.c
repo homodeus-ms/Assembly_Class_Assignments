@@ -1,15 +1,14 @@
 #include <assert.h>
 #include <stdio.h>
-#include <string.h>
 #include "disassembler.h"
 
 #define ARR_SIZE (16)
 #define MNEMONIC_LENGTH (3)
 #define MODE_MAX_LENGTH (7)
 
-#define PRINT(hex, mnemo, mode, h, l) sprintf(out_buffer64, "OPCODE=%02X[%s %s] OPERAND=%s %s", hex, mnemo, mode, h, l)
+#define PRINT(hex, opcode, h, l) sprintf(out_buffer64, "OPCODE=%02X[%s] OPERAND=%s %s", hex, opcode, h, l)
 
-static const unsigned char* s_mnemonics[ARR_SIZE][ARR_SIZE] = {
+static const char* s_mnemonics[ARR_SIZE][ARR_SIZE] = {
     { "brk i", "ora (zp,x)", "", "", "", "ora zp", "asl zp", "", "php i", "ora #", "asl A", "", "", "ora a", "asl a", "" },
     { "bpl r", "ora (zp),y", "", "", "", "ora zp,x", "asl zp,x", "", "clc i", "ora a,y", "", "", "", "ora a,x", "asl a,x", "" },
     { "jsr a", "and (zp,x)", "", "", "bit zp", "and zp", "rol zp", "", "plp i", "and #", "rol A", "", "bit a", "and a", "rol a", "" },
@@ -35,13 +34,12 @@ const unsigned char* disassemble(char* out_buffer64, const unsigned char* mem)
     const unsigned char* result;
     const unsigned char* p = mem;
     unsigned char read_hex;
-    const unsigned char* opcode;
-    unsigned char mnemonic[4];
+    const char* p_mnemonic;
+    const char* p_operand;
     
     unsigned char index_x;
     unsigned char index_y;
-   
-    const unsigned char mode[MODE_MAX_LENGTH];
+    
     signed short addr_l = -1;
     signed short addr_h = -1;
 
@@ -51,21 +49,18 @@ const unsigned char* disassemble(char* out_buffer64, const unsigned char* mem)
 
     assert(index_x <= 0xf && index_y <= 0xf);
 
-    opcode = s_mnemonics[index_y][index_x];
+    p_mnemonic = s_mnemonics[index_y][index_x];
 
-    if (opcode == "") {
+    if (p_mnemonic == "") {
         result = mem;
         return result;
     }
 
-    strncpy(mnemonic, opcode, MNEMONIC_LENGTH);
-    mnemonic[MNEMONIC_LENGTH] = '\0';
-    
-    strcpy(mode, opcode + 4);
+    p_operand = p_mnemonic + 4;
 
-    if (mode[0] == 'A' || mode[0] == 'i') {
+    if (*p_operand == 'A' || *p_operand == 'i') {
         result = p + 1;
-    } else if (mode[0] == 'a' || mode[1] == 'a') {
+    } else if (*p_operand == 'a' || *(p_operand + 1) == 'a') {
         addr_l = *(p + 1);
         addr_h = *(p + 2);
         result = p + 3;
@@ -84,9 +79,7 @@ const unsigned char* disassemble(char* out_buffer64, const unsigned char* mem)
         sprintf(str_high_b, "%02X", addr_h);
     }
     
-    PRINT(read_hex, mnemonic, mode, str_high_b, str_low_b);
+    PRINT(read_hex, p_mnemonic, str_high_b, str_low_b);
     
-    assert(result != NULL);
-
     return result;
 }
