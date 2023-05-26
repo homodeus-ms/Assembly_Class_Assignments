@@ -11,13 +11,12 @@ out3=out2+1
     ldx #$FF
     txs
 
-    clc        ; 2
     lda in3    ; 4
     tax        ; 2
     rol        ; 2
     txa        ; 2
     ror        ; 2
-    sta out3   ; 4   18
+    sta out3   ; 4   16
 
     lda in2
     ror
