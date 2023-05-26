@@ -8,20 +8,16 @@ out1=out0+1
 out2=out1+1
 out3=out2+1
 
-keep_MSB=$00
-
     ldx #$FF
     txs
 
-    clc
-    lda in3
-    tax
-    and #$80
-    sta keep_MSB
-    txa
-    ror
-    ora keep_MSB
-    sta out3
+    clc        ; 2
+    lda in3    ; 4
+    tax        ; 2
+    rol        ; 2
+    txa        ; 2
+    ror        ; 2
+    sta out3   ; 4   18
 
     lda in2
     ror
