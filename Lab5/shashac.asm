@@ -56,19 +56,19 @@ accum:      ; 0x802B
 
 check:            ; 0x8057 c가 1 상태임
 
-    lda out
+    lda out+3
     and buffer+1
     beq continue
     
-    lda out+1
-    and buffer+1
-    beq continue
-
     lda out+2
     and buffer+1
     beq continue
 
-    lda out+3
+    lda out+1
+    and buffer+1
+    beq continue
+
+    lda out
     and buffer+1
     bne end
 
