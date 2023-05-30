@@ -24,7 +24,7 @@ first:
     sta out+3
 
     txa
-    beq check
+    beq keep
 
 accum:
 
@@ -50,6 +50,20 @@ accum:
     
     bne accum
   
+keep:
+
+    lda out
+    sta accumVal
+    
+    lda out+1
+    sta accumVal+1
+    
+    lda out+2
+    sta accumVal+2
+ 
+    lda out+3
+    sta accumVal+3
+
 check:            ; 0x806c c가 1 상태임
 
     lda buffer+1
@@ -65,20 +79,6 @@ check:            ; 0x806c c가 1 상태임
     bit out
     bne end
   
-keep:
-
-    lda out
-    sta accumVal
-    
-    lda out+1
-    sta accumVal+1
-    
-    lda out+2
-    sta accumVal+2
- 
-    lda out+3
-    sta accumVal+3
-
 continue:        ; 0x8083 여전히 c는 1
     
     lda out
