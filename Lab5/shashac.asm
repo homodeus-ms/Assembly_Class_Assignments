@@ -2,9 +2,6 @@ buffer=$C000
 out=$2300
 accumVal=$11
 
-    ldx #$FF
-    txs
-
     lda buffer
     asl
     asl
@@ -27,7 +24,7 @@ first:
     sta out+3
 
     txa
-    beq keep
+    beq check
 
 accum:
 
@@ -52,41 +49,7 @@ accum:
     tax
     
     bne accum
-    
-keep:
-
-    lda out
-    sta accumVal
-    
-    lda out+1
-    sta accumVal+1
-    
-    lda out+2
-    sta accumVal+2
- 
-    lda out+3
-    sta accumVal+3
-
-    jmp check
-
-loop:   ; 0x8058
-
-    lda out
-    eor accumVal
-    sta out
-
-    lda out+1
-    eor accumVal+1
-    sta out+1
-
-    lda out+2
-    eor accumVal+2
-    sta out+2
-
-    lda out+3
-    eor accumVal+3
-    sta out+3
-
+  
 check:            ; 0x806c c가 1 상태임
 
     lda buffer+1
@@ -101,6 +64,20 @@ check:            ; 0x806c c가 1 상태임
 
     bit out
     bne end
+  
+keep:
+
+    lda out
+    sta accumVal
+    
+    lda out+1
+    sta accumVal+1
+    
+    lda out+2
+    sta accumVal+2
+ 
+    lda out+3
+    sta accumVal+3
 
 continue:        ; 0x8083 여전히 c는 1
     
@@ -124,6 +101,24 @@ continue:        ; 0x8083 여전히 c는 1
     ora #1
     sta out+3
 
-    jmp loop    ; 0x80A7
+loop:   ; 0x8058
+
+    lda out
+    eor accumVal
+    sta out
+
+    lda out+1
+    eor accumVal+1
+    sta out+1
+
+    lda out+2
+    eor accumVal+2
+    sta out+2
+
+    lda out+3
+    eor accumVal+3
+    sta out+3
+
+    jmp check
 
 end:
