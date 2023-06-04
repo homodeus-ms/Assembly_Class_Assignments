@@ -8,7 +8,7 @@ callnum: ; (num4comp, table) | <A,X,P>
 ; search num in table, and change it
 ;====================================
 
-    .SUBROUTINE
+    ;.SUBROUTINE
 
     ldx #LEN-1                               ; 0x8047 A2
     lda $00   ; can delete it
@@ -38,7 +38,7 @@ won:
 ; search order : cross> row > col
 ;=====================================
 
-    .SUBROUTINE
+    ;.SUBROUTINE
 
 ;==== center value check ========
 
