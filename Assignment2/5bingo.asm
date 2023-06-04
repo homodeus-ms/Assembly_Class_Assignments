@@ -1,4 +1,5 @@
 COL=5       ; using column count and just count
+CENTER=12
 offset=$10  ; using won func
 num=$00
 
@@ -34,15 +35,56 @@ callnum: ; (num, table) | <A,X,P>
 won:
 ;=====================================
 ; check bingo, T(1) or F(0) in $01
-; search order : row > col > cross
+; search order : cross> row > col
 ;=====================================
 
     .SUBROUTINE
 
+;==== center value check ========
+
+    sec
+    ldx #CENTER
+    lda table,x
+    bpl .row            ; 센터값이 플러스면 크로스 체크 건너뜀
+
+;==== search cross direction ====   
+
+.cross:
+    ldx #LEN-1
+    ldy #COL
+
+.cross1:
+    lda table,x
+    bpl .cross2
+    txa 
+    beq .bingo
+    sbc #COL
+    tax
+    dex
+    
+    jmp .cross1
+
+.cross2:
+    ldx #LEN-5
+
+.cr2loop:
+    lda table,x
+    bpl .row
+    dey
+    beq .bingo
+    txa
+    sbc #COL
+    tax
+    inx
+
+    jmp .cr2loop
+
+;================================
+
 ;===== search row direction ====
 
-.row: 
-    sec                                 ; 0x805A 38
+.row:            ; c=1
+                                  
     lda #LEN-1
     sta offset
 
@@ -91,7 +133,7 @@ won:
 
 .colskip:
     dey
-    beq .cross
+    beq .notyet
 
     lda offset
     sbc #1
@@ -99,40 +141,6 @@ won:
     tax
     
     jmp .colloop
-
-;================================
-
-;==== search cross direction ====   ; c=1
-
-.cross:
-    ldx #LEN-1
-    ldy #COL
-
-.cross1:
-    lda table,x
-    bpl .cross2
-    txa 
-    beq .bingo
-    sbc #COL
-    tax
-    dex
-    
-    jmp .cross1
-
-.cross2:
-    ldx #LEN-5
-
-.cr2loop:
-    lda table,x
-    bpl .notyet
-    dey
-    beq .bingo
-    txa
-    sbc #COL
-    tax
-    inx
-
-    jmp .cr2loop
 
 ;================================
 
