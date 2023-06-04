@@ -1,9 +1,9 @@
-COL=5       ; using column count and just count
-CENTER=12
-offset=$10  ; using won func
-num=$00
+COLCNT=5       ; using as column count and just count
+CVALUE=12
+offsidx=$10  ; using at won func
+num4comp=$00
 
-callnum: ; (num, table) | <A,X,P>            
+callnum: ; (num4comp, table) | <A,X,P>            
 ;====================================
 ; search num in table, and change it
 ;====================================
@@ -11,7 +11,7 @@ callnum: ; (num, table) | <A,X,P>
     .SUBROUTINE
 
     ldx #LEN-1                               ; 0x8047 A2
-    lda num   ; can delete it
+    lda num4comp   ; can delete it
     
 .searchloop:
     cmp table,x                              ; 0x804B D5
@@ -43,7 +43,7 @@ won:
 ;==== center value check ========
 
     sec
-    ldx #CENTER
+    ldx #CVALUE
     lda table,x
     bpl .row            ; 센터값이 플러스면 크로스 체크 건너뜀
 
@@ -51,14 +51,14 @@ won:
 
 .cross:
     ldx #LEN-1
-    ldy #COL
+    ldy #COLCNT
 
 .cross1:
     lda table,x
     bpl .cross2
     txa 
     beq .bingo
-    sbc #COL
+    sbc #COLCNT
     tax
     dex
     
@@ -73,7 +73,7 @@ won:
     dey
     beq .bingo
     txa
-    sbc #COL
+    sbc #COLCNT
     tax
     inx
 
@@ -86,10 +86,10 @@ won:
 .row:            ; c=1
                                   
     lda #LEN-1
-    sta offset
+    sta offsidx
 
     tax
-    ldy #COL
+    ldy #COLCNT
 
 .rowloop:
     lda table,x                 ; 0x8062 B5
@@ -101,12 +101,12 @@ won:
     jmp .rowloop
 
 .rowskip:
-    lda offset
-    sbc #COL
+    lda offsidx
+    sbc #COLCNT
     bmi .col
-    sta offset
+    sta offsidx
     tax
-    ldy #COL
+    ldy #COLCNT
     jmp .rowloop
 
 ;===============================
@@ -116,16 +116,16 @@ won:
 .col: 
     sec
     lda #LEN-1
-    sta offset
+    sta offsidx
 
     tax
-    ldy #COL
+    ldy #COLCNT
 
 .colloop:
     lda table,x
     bpl .colskip
     txa
-    sbc #COL
+    sbc #COLCNT
     bmi .bingo
     tax 
     
@@ -135,9 +135,9 @@ won:
     dey
     beq .notyet
 
-    lda offset
+    lda offsidx
     sbc #1
-    sta offset
+    sta offsidx
     tax
     
     jmp .colloop
