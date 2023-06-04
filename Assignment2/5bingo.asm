@@ -8,18 +8,18 @@ callnum: ; (num4comp, table) | <A,X,P>
 ; search num in table, and change it
 ;====================================
 
-    ;.SUBROUTINE
+    .SUBROUTINE
 
     ldx #LEN-1                               ; 0x8047 A2
     lda $00   ; can delete it
     
-.searchloop:
+.sloop:
     cmp table,x                              ; 0x804B D5
     beq .found                               ; F0
     dex                                      ; CA
-    bpl .searchloop                          ; 10
+    bpl .sloop                          ; 10
 
-.notfound:
+.fail:
     rts                  ; 60
 
 .found:
@@ -38,7 +38,7 @@ won:
 ; search order : cross> row > col
 ;=====================================
 
-    ;.SUBROUTINE
+    .SUBROUTINE
 
 ;==== center value check ========
 
