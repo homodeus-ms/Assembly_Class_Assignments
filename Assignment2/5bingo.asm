@@ -1,7 +1,7 @@
-COLCNT=5       ; using as column count and just count
-CVALUE=12
-offsidx=$10  ; using at won func
-num4comp=$00
+;COLCNT=5       ; using as column count and just count
+;CVALUE=12
+;offsidx=$10  ; using at won func
+;num4comp=$00
 
 callnum: ; (num4comp, table) | <A,X,P>            
 ;====================================
@@ -11,7 +11,7 @@ callnum: ; (num4comp, table) | <A,X,P>
     .SUBROUTINE
 
     ldx #LEN-1                               ; 0x8047 A2
-    lda num4comp   ; can delete it
+    lda $00   ; can delete it
     
 .searchloop:
     cmp table,x                              ; 0x804B D5
@@ -43,22 +43,22 @@ won:
 ;==== center value check ========
 
     sec
-    ldx #CVALUE
+    ldx #12
     lda table,x
-    bpl .row            ; 센터값이 플러스면 크로스 체크 건너뜀
+    bpl .row            ; skip '.cross' when centervalue is still plus
 
 ;==== search cross direction ====   
 
 .cross:
     ldx #LEN-1
-    ldy #COLCNT
+    ldy #5
 
 .cross1:
     lda table,x
     bpl .cross2
     txa 
     beq .bingo
-    sbc #COLCNT
+    sbc #5
     tax
     dex
     
@@ -73,7 +73,7 @@ won:
     dey
     beq .bingo
     txa
-    sbc #COLCNT
+    sbc #5
     tax
     inx
 
@@ -86,10 +86,10 @@ won:
 .row:            ; c=1
                                   
     lda #LEN-1
-    sta offsidx
+    sta $10
 
     tax
-    ldy #COLCNT
+    ldy #5
 
 .rowloop:
     lda table,x                 ; 0x8062 B5
@@ -101,12 +101,12 @@ won:
     jmp .rowloop
 
 .rowskip:
-    lda offsidx
-    sbc #COLCNT
+    lda $10
+    sbc #5
     bmi .col
-    sta offsidx
+    sta $10
     tax
-    ldy #COLCNT
+    ldy #5
     jmp .rowloop
 
 ;===============================
@@ -116,16 +116,16 @@ won:
 .col: 
     sec
     lda #LEN-1
-    sta offsidx
+    sta $10
 
     tax
-    ldy #COLCNT
+    ldy #5
 
 .colloop:
     lda table,x
     bpl .colskip
     txa
-    sbc #COLCNT
+    sbc #5
     bmi .bingo
     tax 
     
@@ -135,9 +135,9 @@ won:
     dey
     beq .notyet
 
-    lda offsidx
+    lda $10
     sbc #1
-    sta offsidx
+    sta $10
     tax
     
     jmp .colloop
