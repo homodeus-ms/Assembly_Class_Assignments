@@ -33,6 +33,7 @@ retval=$20
     tsx
     inx
     inx
+    txs
     
     pla
     sta num0
