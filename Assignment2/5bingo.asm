@@ -64,7 +64,7 @@ won: ; (no argument -> ret 01 or 00)
     lda board+18
     bpl .cross2
     lda board+24
-    bmi .bingo
+    bne .bingo
 
 .cross2:
     lda board+4
@@ -74,70 +74,93 @@ won: ; (no argument -> ret 01 or 00)
     lda board+16
     bpl .row
     lda board+20
-    bmi .bingo
+    bne .bingo
 
 
 ;================================
 
 ;===== search row direction ====
 
-.row:                ; c=1
-                                  
+.row:
+
     ldx #LENG-1
-    ldy #COLCNT 
+    ldy #COLCNT
 
 .rowloop:
-    lda board,x                 ; 0x8062 B5
-    bpl .rowskip                ; 0x8064 10
-    dex 
-    dey
-    beq .bingo
-    
-    jmp .rowloop
 
-.rowskip:
-    tya
-    sta temp
+    lda board,x
+    bmi .rcheck
+
+.changex:
+
+    sty temp
     txa
     sbc temp
-    bmi .col
+    bmi .col1
     tax
     ldy #COLCNT
-    
+
     jmp .rowloop
+
+.rcheck:
+   
+    dex
+    dey
+    bne .rowloop
+    jmp .bingo
+
 
 ;===============================
 
 ;==== search col direction =====   ; c=0
 
-.col: 
-    sec
-
-    ldx #LENG-1
-    stx offidx        
-
-    ldy #COLCNT
-
-.colloop:
-    lda board,x
-    bpl .colskip
-    txa
-    sbc #COLCNT
-    bmi .bingo
-    tax 
+.col1:
     
-    jmp .colloop
+    ldx #COLCNT
+    ldy #0
 
-.colskip:
-    dey
+.ccheck:
+
+    dex
+    bmi .col2
+    lda board,x
+    bmi .pushx
+    
+    jmp .ccheck
+
+.pushx:
+    
+    txa
+    pha
+    iny
+    jmp .ccheck
+    
+
+.col2:
+
+    tya
     beq .notyet
-
-    lda offidx
-    sbc #1
-    sta offidx
+    
+    pla
     tax
     
-    jmp .colloop
+    lda board+5,x
+    bpl .nextrow
+  
+    lda board+10,x
+    bpl .nextrow
+
+    lda board+15,x
+    bpl .nextrow
+
+    lda board+20,x
+    bmi .bingo
+
+.nextrow:
+
+    dey
+    jmp .col2
+
 
 ;================================
 
@@ -146,7 +169,7 @@ won: ; (no argument -> ret 01 or 00)
     sta $01
     rts
 
-.bingo:
+.bingo:            ;(0x80CB maybe?)
     lda #1
     sta $01
     rts
