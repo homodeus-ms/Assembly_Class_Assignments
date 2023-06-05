@@ -15,13 +15,16 @@ num0=$00
 num1=$01
 retaddrl=$02
 retaddrh=$03
-POPCNT=retaddrh+1-num0
+
 keepa=$04
 keepx=$05
 keepy=$06
-retval=$20
 
     .SUBROUTINE
+
+    sec
+
+retval=$20
 
 .keepval:
     stx keepx
@@ -73,6 +76,8 @@ max: ; (num0, num1 -> ret max | <X>)
 ;=====================================
 
     .SUBROUTINE
+    
+    sec
 
     ; A = $11  /  num1
 
@@ -100,6 +105,8 @@ minmax: ;(num0,num1 > ret min, max at stack | <p>)
 ;=================================================
 
     .SUBROUTINE
+
+    sec
 
 .keepval:             ; minmax start : 0x8097
     sta keepa         ; curr stack : 01F9
@@ -161,6 +168,8 @@ mmref: ;(num0, num1, out_min, out_max >> ret min, max) | <p>)
 ;============================================================
 
     .SUBROUTINE
+
+    sec
 
 outmax=$08
 outmin=$0A
