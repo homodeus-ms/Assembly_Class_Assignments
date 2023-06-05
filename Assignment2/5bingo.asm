@@ -3,6 +3,9 @@
 ;offsidx=$10  ; using at won func
 ;num4comp=$00
 
+LENG=25
+board=$80
+
 callnum: ; (num4comp, table) | <A,X,P>            
 ;====================================
 ; search num in table, and change it
@@ -10,11 +13,12 @@ callnum: ; (num4comp, table) | <A,X,P>
 
     .SUBROUTINE
 
-    ldx #LEN-1                               ; 0x8047 A2
+
+    ldx #LENG-1                               ; 0x8047 A2
     lda $00   ; can delete it
     
 .sloop:
-    cmp table,x                              ; 0x804B D5
+    cmp board,x                              ; 0x804B D5
     beq .found                               ; F0
     dex                                      ; CA
     bpl .sloop                          ; 10
@@ -23,9 +27,9 @@ callnum: ; (num4comp, table) | <A,X,P>
     rts                  ; 60
 
 .found:
-    lda table,x                              ; 0x8053 B5
+    lda board,x                              ; 0x8053 B5
     ora #$80
-    sta table,x
+    sta board,x
     rts
 
 ;=====================================
@@ -44,17 +48,17 @@ won:
 
     sec
     ldx #12
-    lda table,x
+    lda board,x
     bpl .row            ; skip '.cross' when centervalue is still plus
 
 ;==== search cross direction ====   
 
 .cross:
-    ldx #LEN-1
+    ldx #LENG-1
     ldy #5
 
 .cross1:
-    lda table,x
+    lda board,x
     bpl .cross2
     txa 
     beq .bingo
@@ -65,10 +69,10 @@ won:
     jmp .cross1
 
 .cross2:
-    ldx #LEN-5
+    ldx #LENG-5
 
 .cr2loop:
-    lda table,x
+    lda board,x
     bpl .row
     dey
     beq .bingo
@@ -85,14 +89,14 @@ won:
 
 .row:            ; c=1
                                   
-    lda #LEN-1
+    lda #LENG-1
     sta $10
 
     tax
     ldy #5
 
 .rowloop:
-    lda table,x                 ; 0x8062 B5
+    lda board,x                 ; 0x8062 B5
     bpl .rowskip                ; 0x8064 10
     dex 
     dey
@@ -115,14 +119,14 @@ won:
 
 .col: 
     sec
-    lda #LEN-1
+    lda #LENG-1
     sta $10
 
     tax
     ldy #5
 
 .colloop:
-    lda table,x
+    lda board,x
     bpl .colskip
     txa
     sbc #5
