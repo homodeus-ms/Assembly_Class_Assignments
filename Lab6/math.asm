@@ -36,31 +36,23 @@ retval=$20
     txs
     
     pla
-    sta num0
+    sta retval   ; num0
     
     pla    ; A = num1, sp = bottom
 
 .checkmin:
 
-    cmp num0
-    bcs .storen0
+    cmp retval
+    bcs .return
 
 .storen1:
     sta retval
-    
-    jmp .return
-
-.storen0:
-    lda num0
-    sta retval
 
 .return:
-    lda num1
-    pha
-    lda num0
-    pha
-
+    
     tsx
+    dex
+    dex
     dex
     dex
     txs
