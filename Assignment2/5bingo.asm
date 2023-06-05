@@ -3,12 +3,12 @@ CVALUE=12
 LENG=25
 offidx=$10  ; using at won func
 temp=$1F
+stackp=$1E
+
 num=$00
 board=$80
-callcnt=$1A
+calledn=$11
 
-    lda #0
-    sta callcnt
 
 callnum: ; (num -> search and check) | <A,X,P>            
 ;==============================================
@@ -33,7 +33,6 @@ callnum: ; (num -> search and check) | <A,X,P>
 
     ora #$80
     sta board,x
-    inc callcnt
     
     rts
 
@@ -49,46 +48,34 @@ won: ; (no argument -> ret 01 or 00)
 
     .SUBROUTINE
 
-;==== total called count check ==
-
-    lda callcnt
-    cmp #COLCNT
-    bcc .notyet
-
 ;==== center value check ========
 
     sec
-    ldx #CVALUE
-    lda board,x
-    bpl .row                      ; skip to '.cross' when centervalue is still plus
+    lda board+CVALUE
+    bpl .row                     ; skip to '.cross' when centervalue is still plus
 
-;==== search cross direction ====   
+;======== check cross  ==========   
 
 .cross:
-    ldx #LENG-1
-
-.cross1:
-    lda board,x
+    lda board
     bpl .cross2
-    txa 
-    beq .bingo
-    sbc #COLCNT+1
-    tax
-    
-    jmp .cross1
+    lda board+6
+    bpl .cross2
+    lda board+18
+    bpl .cross2
+    lda board+24
+    bne .bingo
 
 .cross2:
-    ldx #LENG-5
-
-.cr2loop:
-    lda board,x
+    lda board+4
     bpl .row
-    txa
-    sbc #COLCNT-1
-    beq .bingo
-    tax
-    
-    jmp .cr2loop
+    lda board+8
+    bpl .row
+    lda board+16
+    bpl .row
+    lda board+20
+    bne .bingo
+
 
 ;================================
 
