@@ -64,7 +64,7 @@ won: ; (no argument -> ret 01 or 00)
     lda board+18
     bpl .cross2
     lda board+24
-    bne .bingo
+    bmi .bingo
 
 .cross2:
     lda board+4
@@ -74,7 +74,7 @@ won: ; (no argument -> ret 01 or 00)
     lda board+16
     bpl .row
     lda board+20
-    bne .bingo
+    bmi .bingo
 
 
 ;================================
