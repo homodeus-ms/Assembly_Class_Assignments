@@ -19,6 +19,9 @@ retaddrh=$03
 keepa=$04
 keepx=$05
 keepy=$06
+keepp=$07
+
+PG1=$0100
 
     .SUBROUTINE
 
@@ -30,15 +33,12 @@ retval=$20
 
 .poploop:
 
-    tsx
-    inx
-    inx
-    txs
+    tsx     ; x = curr stack pointer 
     
-    pla
+    lda PG1+3,x
     sta retval   ; num0
     
-    pla    ; A = num1, sp = bottom
+    lda PG1+4,x    ; A = num1, sp = bottom
 
 .checkmin:
 
@@ -50,13 +50,6 @@ retval=$20
 
 .return:
     
-    tsx
-    dex
-    dex
-    dex
-    dex
-    txs
-
     lda keepa
     ldx keepx
 
