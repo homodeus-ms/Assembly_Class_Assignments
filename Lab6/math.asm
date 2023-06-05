@@ -22,12 +22,10 @@ keepy=$06
 
     .SUBROUTINE
 
-    sec
-
 retval=$20
 
 .keepval:
-    stx keepx
+    stx keepx        ; 0x805B 86
     sta num0
 
 .poploop:
@@ -36,7 +34,7 @@ retval=$20
     inx
     inx
     inx
-    txs
+    txs              ; 0x8063 9A
     
     pla    ; A = num1, sp = bottom
 
@@ -55,10 +53,10 @@ retval=$20
     sta retval
 
 .return:
-    clc
+    sec
     tsx
     txa
-    adc #4
+    sbc #4
     tax
     txs
 
@@ -76,10 +74,9 @@ max: ; (num0, num1 -> ret max | <X>)
 ;=====================================
 
     .SUBROUTINE
-    
-    sec
 
-    ; A = $11  /  num1
+    sta keepa    
+    lda $11
 
 .checkmax:
     
@@ -87,12 +84,14 @@ max: ; (num0, num1 -> ret max | <X>)
     bcs .storen1
 
 .storen0:
-    ldx num0
-    
+    ldx $10
+    lda keepa
+
     rts
 
 .storen1:
     tax
+    lda keepa
 
     rts
 
