@@ -5,6 +5,10 @@ offidx=$10  ; using at won func
 temp=$1F
 num=$00
 board=$80
+callcnt=$1A
+
+    lda #0
+    sta callcnt
 
 callnum: ; (num -> search and check) | <A,X,P>            
 ;==============================================
@@ -29,6 +33,8 @@ callnum: ; (num -> search and check) | <A,X,P>
 
     ora #$80
     sta board,x
+    inc callcnt
+    
     rts
 
 ;=====================================
@@ -42,6 +48,12 @@ won: ; (no argument -> ret 01 or 00)
 ;=====================================
 
     .SUBROUTINE
+
+;==== total called count check ==
+
+    lda callcnt
+    cmp #COLCNT
+    bcc .notyet
 
 ;==== center value check ========
 
