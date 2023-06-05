@@ -1,33 +1,32 @@
-;COLCNT=5       ; using as column count and just count
-;CVALUE=12
-;offsidx=$10  ; using at won func
-;num4comp=$00
-
+COLCNT=5       ; using as column count and just count
+CVALUE=12
 LENG=25
+offidx=$10  ; using at won func
+temp=$1F
+num=$00
 board=$80
 
-callnum: ; (num4comp, table) | <A,X,P>            
-;====================================
-; search num in table, and change it
-;====================================
+callnum: ; (num -> search and check) | <A,X,P>            
+;==============================================
+; search num in board, and change it
+;==============================================
 
     .SUBROUTINE
 
-
     ldx #LENG-1                               ; 0x8047 A2
-    lda $00   ; can delete it
+    lda num          ; can delete it(?)
     
 .sloop:
     cmp board,x                              ; 0x804B D5
-    beq .found                               ; F0
-    dex                                      ; CA
-    bpl .sloop                          ; 10
+    beq .found                               ; opc=F0
+    dex                                      ; opc=CA
+    bpl .sloop                               ; opc=10
 
 .fail:
-    rts                  ; 60
+    rts                                      ; opc=60
 
 .found:
-    lda board,x                              ; 0x8053 B5
+
     ora #$80
     sta board,x
     rts
@@ -36,7 +35,7 @@ callnum: ; (num4comp, table) | <A,X,P>
 
 
 
-won:
+won: ; (no argument -> ret 01 or 00)
 ;=====================================
 ; check bingo, T(1) or F(0) in $01
 ; search order : cross> row > col
@@ -47,24 +46,22 @@ won:
 ;==== center value check ========
 
     sec
-    ldx #12
+    ldx #CVALUE
     lda board,x
-    bpl .row            ; skip '.cross' when centervalue is still plus
+    bpl .row                      ; skip to '.cross' when centervalue is still plus
 
 ;==== search cross direction ====   
 
 .cross:
     ldx #LENG-1
-    ldy #5
 
 .cross1:
     lda board,x
     bpl .cross2
     txa 
     beq .bingo
-    sbc #5
+    sbc #COLCNT+1
     tax
-    dex
     
     jmp .cross1
 
@@ -74,26 +71,21 @@ won:
 .cr2loop:
     lda board,x
     bpl .row
-    dey
-    beq .bingo
     txa
-    sbc #5
+    sbc #COLCNT-1
+    beq .bingo
     tax
-    inx
-
+    
     jmp .cr2loop
 
 ;================================
 
 ;===== search row direction ====
 
-.row:            ; c=1
+.row:                ; c=1
                                   
-    lda #LENG-1
-    sta $10
-
-    tax
-    ldy #5
+    ldx #LENG-1
+    ldy #COLCNT 
 
 .rowloop:
     lda board,x                 ; 0x8062 B5
@@ -105,12 +97,14 @@ won:
     jmp .rowloop
 
 .rowskip:
-    lda $10
-    sbc #5
+    tya
+    sta temp
+    txa
+    sbc temp
     bmi .col
-    sta $10
     tax
-    ldy #5
+    ldy #COLCNT
+    
     jmp .rowloop
 
 ;===============================
@@ -119,17 +113,17 @@ won:
 
 .col: 
     sec
-    lda #LENG-1
-    sta $10
 
-    tax
-    ldy #5
+    ldx #LENG-1
+    stx offidx        
+
+    ldy #COLCNT
 
 .colloop:
     lda board,x
     bpl .colskip
     txa
-    sbc #5
+    sbc #COLCNT
     bmi .bingo
     tax 
     
@@ -139,9 +133,9 @@ won:
     dey
     beq .notyet
 
-    lda $10
+    lda offidx
     sbc #1
-    sta $10
+    sta offidx
     tax
     
     jmp .colloop
