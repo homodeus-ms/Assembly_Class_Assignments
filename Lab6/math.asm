@@ -24,43 +24,43 @@ retval=$20
     .SUBROUTINE
 
 .keepval:
-    sta keepa    ; use only A resister
+    stx keepx
+    sta num0
 
 .poploop:
-    pla
-    sta retaddrl ; Low
-    pla
-    sta retaddrh ; High
-    pla 
-    sta num0
-    pla 
-    sta num1
+
+    tsx
+    inx
+    inx
+    inx
+    txs
+    
+    pla    ; A = num1, sp = bottom
 
 .checkmin:
 
-    cmp num1
-    bcs .storen1
+    cmp num0
+    bcs .storen0
 
-.storen0:
+.storen1:
     sta retval
     
     jmp .return
 
-.storen1:
-    lda num1
+.storen0:
+    lda num0
     sta retval
 
 .return:
-    lda num1
-    pha
-    lda num0
-    pha
-    lda retaddrh
-    pha
-    lda retaddrl
-    pha
+    clc
+    tsx
+    txa
+    adc #4
+    tax
+    txs
 
-    lda keepa     ; recover A resister
+    lda num0
+    ldx keepx
 
     rts
 
@@ -74,22 +74,20 @@ max: ; (num0, num1 -> ret max | <X>)
 
     .SUBROUTINE
 
-.keepval:
-    sta keepa    ; use only A resister
-    
+    ; A = $11  /  num1
+
 .checkmax:
-    lda num0
-    cmp num1
-    bcs .storen0
+    
+    cmp $10 ; num0
+    bcs .storen1
 
-.storen1:
-    ldx num1
-    lda keepa
-
-    rts
 .storen0:
     ldx num0
-    lda keepa
+    
+    rts
+
+.storen1:
+    tax
 
     rts
 
