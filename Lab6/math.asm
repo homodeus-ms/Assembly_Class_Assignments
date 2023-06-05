@@ -26,15 +26,16 @@ retval=$20
 
 .keepval:
     stx keepx        ; 0x805B 86
-    sta num0
+    sta keepa
 
 .poploop:
 
     tsx
     inx
     inx
-    inx
-    txs              ; 0x8063 9A
+    
+    pla
+    sta num0
     
     pla    ; A = num1, sp = bottom
 
@@ -53,14 +54,17 @@ retval=$20
     sta retval
 
 .return:
-    sec
+    lda num1
+    pha
+    lda num0
+    pha
+
     tsx
-    txa
-    sbc #4
-    tax
+    dex
+    dex
     txs
 
-    lda num0
+    lda keepa
     ldx keepx
 
     rts
