@@ -125,8 +125,9 @@ lastcol=$1B
     tax 
     dex
     stx lastidx          ; save lastidx 
-    sec
-    sbc lastrow
+    
+    sbc lastrow          ; size=5 기준으로 A(25) - lastrow(4) 이므로 -1을 더 빼줘야 하는데  
+                         ; 현재 c=0 상태이므로 굳이 sec를 안하고 그냥 빼버림 
     sta lastcol
 
     lda size    
@@ -183,10 +184,11 @@ lastcol=$1B
 
 ;===== search row direction =====
 
-.row:
+.row:                       ; c=0
 
     ldx size
     ldy lastidx
+    sec
 
 .rowloop:
 
