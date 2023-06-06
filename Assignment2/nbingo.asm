@@ -18,7 +18,7 @@ btbl=$12
 size=$14
 num=$15
 lastidx=$16
-lastlow=$17
+lastrow=$17
 POPCNT=%11111010    ; -6
 
 
@@ -37,7 +37,7 @@ POPCNT=%11111010    ; -6
     lda size
     tax
     dex
-    stx lastlow    ; size-1
+    stx lastrow    ; size-1
     beq .strlidx   ;  in case of size=1
     clc
 
@@ -86,7 +86,7 @@ won: ; (btbl,n -> ret T/F at $01 | <A,X,Y>
 ; find bingo in n * n size btbl
 ; n : board size, btblt : board address
 ; stack : right -> left
-; btbl=$12, size=$14, lastidx=$16, lastlow=$17
+; btbl=$12, size=$14, lastidx=$16, lastrow=$17
 ; return True : 1 in $01 / False : 0 in $01
 ; stack clean up by caller
 ;=============================================
@@ -107,9 +107,29 @@ lastcol=$1B
     sta btbl+1
     pla
     sta size
+    clc
+    tax
+    dex
+    stx lastrow           ;
+    inx
+
+.getlidx:
+    
+    dex
+    beq .chksize
+    adc size
+    jmp .getlidx
 
 .chksize:
-    
+    ; prepare some variables, can cut off(?)
+    tax 
+    dex
+    stx lastidx          ; save lastidx 
+    sec
+    sbc lastrow
+    sta lastcol
+
+    lda size    
     lsr 
     bcc .row             ; no need cross check if size is even
 
@@ -135,8 +155,7 @@ lastcol=$1B
 .cross2:
 
     lda lastidx
-    sbc lastlow
-    sta lastcol           ; will use at .col1 later
+    sbc lastrow
     tay
 
 .cloop2:
