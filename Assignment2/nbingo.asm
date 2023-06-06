@@ -110,7 +110,7 @@ lastcol=$1B
     clc
     tax
     dex
-    stx lastrow           ;
+    stx lastrow           
     inx
 
 .getlidx:
@@ -129,18 +129,6 @@ lastcol=$1B
     sbc lastrow          ; size=5 기준으로 A(25) - lastrow(4) 이므로 -1을 더 빼줘야 하는데  
                          ; 현재 c=0 상태이므로 굳이 sec를 안하고 그냥 빼버림 
     sta lastcol
-
-    lda size    
-    lsr 
-    bcc .row             ; no need cross check if size is even
-
-.centchk:                ; 14 cycle(?)
-
-    lda lastidx
-    lsr
-    tay
-    lda (btbl),y
-    bpl .row
 
 ;===== check cross direction =====
 
