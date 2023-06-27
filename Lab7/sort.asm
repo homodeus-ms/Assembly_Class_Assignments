@@ -7,7 +7,7 @@ TITLE Sort
 
 .DATA
 
-msg DB 254 DUP (?), '$'
+msg DB 256 DUP (0)
 PADDING EQU 2
 msg_length DW ?
 msg_start EQU msg+2
@@ -33,25 +33,24 @@ sort_start:
     mov bx, msg_length 
     mov bp, msg_length
     dec bx           ; 전체길이 - 1
-    dec bp
-
+    
     mov si, 0FFFFH  
 
 loop1:               ; si = i / bx = i종료조건 / di = j / bp = j종료조건
     inc si
     cmp si, bx
-    jnl exit
+    jnb exit
     mov di, 0FFFFH
-    sub bp, si       ; bp = j 종료조건 셋팅 (count - 1 - i(si))
+    dec bp
 
 loop2:
     inc di
     cmp di, bp
-    jnl loop1
+    jnb loop1
 
     mov al, msg_start[di]
     cmp al, msg_start[di+1]
-    jng loop2
+    jna loop2
 
     mov ah, msg_start[di+1]
     xchg al, ah
