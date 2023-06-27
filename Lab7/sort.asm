@@ -7,7 +7,8 @@ TITLE Sort
 
 .DATA
 
-msg DB 257 DUP (0)
+MAX_LENGTH EQU 254
+msg DB 257 DUP (MAX_LENGTH)
 PADDING EQU 2
 msg_length DW ?
 msg_start EQU msg+2
@@ -20,12 +21,14 @@ msg_start EQU msg+2
     call read_string
     mov sp, 2
 
-sort_start:
+    mov al, msg[1]
+    xor ah, ah
 
-    mov al, msg[1]           ; msg_length에 실제 문자열의 길이를 저장
-    
-    mov BYTE PTR msg_length, al
-    mov BYTE PTR msg_length[1], 0h
+    mov si, ax
+    mov msg_length, ax
+    mov msg[si+PADDING], '$'
+
+sort_start:
 
     cmp al, 1
     jbe exit                 ; 길이가 1 이하면 바로 exit
@@ -60,9 +63,7 @@ loop2:
     jmp loop2
 
 exit:
-    mov si, msg_length
-    mov msg[si+PADDING], '$' 
-
+    
     mov ah, 09h
     lea dx, msg[2]
     int 21h
