@@ -23,11 +23,12 @@ msg_start EQU msg+2
 sort_start:
 
     mov al, msg[1]           ; msg_length에 실제 문자열의 길이를 저장
-    cmp al, 0
-    je exit                  ; 길이가 0이면 바로 exit로
-
+    
     mov BYTE PTR msg_length, al
     mov BYTE PTR msg_length[1], 0h
+
+    cmp al, 1
+    jbe exit                 ; 길이가 1 이하면 바로 exit
 
     mov bx, msg_length 
     mov bp, msg_length
