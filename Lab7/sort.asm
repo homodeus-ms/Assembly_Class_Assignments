@@ -19,7 +19,7 @@ msg_start EQU msg+2
     lea bx, msg
     push bx
     call read_string
-    mov sp, 2
+    add sp, 2
 
     mov al, msg[1]
     xor ah, ah
