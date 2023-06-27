@@ -1,10 +1,9 @@
-; callnum : 1795 cycle(?!)
 
 callnum: ; (btbl, n, num | <A,X,Y,S,btbl>    
 ;=========================================
 ; search num in btbl, and change it
 ;
-; btbl : bingo board addrres
+; btbl : bingo board address
 ; n : bingo board size
 ; num : called number (7bit)
 ;
@@ -37,17 +36,18 @@ POPCNT=%11111010    ; -6
     lda size
     tax
     dex
-    stx lastrow    ; size-1
+    stx lastrow    ; size-1, 테스트에 callnum없이 won을 호출하는 경우가
+                             ; 있는 것 같음. won함수에서 다시 구하므로 안해도 됨 
     beq .strlidx   ;  in case of size=1
     clc
 
-.getlidx:
+.getlidx:          ; get (size * size)
     adc size
     dex
     bne .getlidx
 
 .strlidx:
-    sbc #0         ; c=0 , it's the same with size * size - 1
+    sbc #0         ; c=0 , it's the same with (size * size) - 1
     sta lastidx
     tay            ; y=2d last index
     
@@ -121,7 +121,7 @@ lastcol=$1B
     jmp .getlidx
 
 .chksize:
-    ; prepare some variables, can cut off(?)
+    ; prepare some variables
     tax 
     dex
     stx lastidx          ; save lastidx 
@@ -205,10 +205,10 @@ lastcol=$1B
 ;============================================
 
 ;=========== search col direction ===========   ; c=0
-; 1. search 1 row, find negative val, push it
-;    => .col1
-; 2. pull those, search only those column
-;    => .col2
+; 1. col1 : 한 줄 확인하면서 negtive value가 있는
+;          곳만 stack에 push
+; 2. col2 : 스택에 저장된 곳만 pull해서 
+;           세로방향 확인
 ;============================================
 
 .col1:
