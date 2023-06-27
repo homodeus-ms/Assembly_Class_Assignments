@@ -8,7 +8,7 @@ TITLE Sort
 .DATA
 
 MAX_LENGTH EQU 254
-msg DB 257 DUP (MAX_LENGTH)
+msg DB MAX_LENGTH, 0, 255 DUP (MAX_LENGTH)
 PADDING EQU 2
 msg_length DW ?
 msg_start EQU msg+2
