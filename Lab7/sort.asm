@@ -7,7 +7,7 @@ TITLE Sort
 
 .DATA
 
-msg DB 256 DUP (0)
+msg DB 257 DUP (0)
 PADDING EQU 2
 msg_length DW ?
 msg_start EQU msg+2
