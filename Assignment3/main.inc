@@ -100,8 +100,8 @@ loopGetC:
     mov dl, al        ; dx에 읽어온 글자
     mov cl, [BUFFER_START+si]
     xor ch, ch
-    assert dx, cx, OFFSET astMsg
-
+    
+    assert dx, cx, astMsg
 
     inc si
     cmp si, bx
