@@ -2,7 +2,7 @@ read_string PROC NEAR
     push bp
     mov bp, sp
     mov bx, [bp+4]
-    mov BYTE PTR [bx+1], 10
+    mov BYTE PTR [bx+1], 4
     mov BYTE PTR [bx+2], 'z'        ; z c a A B Z c a
     mov BYTE PTR [bx+3], 'Z'
     mov BYTE PTR [bx+4], 'a'

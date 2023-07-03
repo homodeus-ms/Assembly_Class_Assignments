@@ -1,0 +1,51 @@
+ .MODEL LARGE, C
+
+FPFUNC TYPEDEF FAR PTR
+
+ .DATA
+msg BYTE "Overflow - result set to 0",13,10,'$'
+vector FPFUNC ?
+
+ .CODE
+ .STARTUP
+
+ mov ax, 3504h ; Load Interrupt 4 and call DOS
+ int 21h ; Get Interrupt Vector
+ mov WORD PTR vector[2],es ; Save segment
+ mov WORD PTR vector[0],bx ; and offset
+
+ push ds ; Save DS
+ mov ax, cs ; Load segment of new routine
+ mov ds, ax
+ mov dx, OFFSET ovrflow ; Load offset of new routine
+ mov ax, 2504h ; Load Interrupt 4 and call DOS
+ int 21h ; Set Interrupt Vector
+ pop ds ; Restore
+ .
+ .
+ .
+ add ax, bx ; Do arithmetic
+ into ; Call Interrupt 4 if overflow
+ .
+ .
+ .
+ lds dx, vector ; Load original address
+ mov ax, 2504h ; Restore it to vector table
+ int 21h ; with DOS set vector function
+
+ mov ax, 4C00h ; Terminate function
+ int 21h
+
+ovrflow PROC FAR
+
+ sti ; Enable interrupts
+ ; (turned off by INT)
+ mov ah, 09h ; Display string function
+ mov dx, OFFSET msg ; Load address
+ int 21h ; Call DOS
+ sub ax, ax ; Set AX to 0
+ cwd ; Set DX to 0
+ iret ; Return
+ 
+ovrflow ENDP
+ END

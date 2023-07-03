@@ -1,0 +1,13 @@
+TITLE rvsstr
+
+.DOSSEG
+.8086
+.NO87
+.MODEL TINY
+
+.DATA
+msg DB "12345$"
+
+.CODE
+.STARTUP
+
