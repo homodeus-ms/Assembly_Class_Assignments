@@ -52,11 +52,7 @@ getFileName:
     mov dx, OFFSET buffer
     int 21h
 
-    mov bl, buffer[1]
-    xor bh, bh
-    mov [bx+BUFFER_START], '$'
-
-    print BUFFER_START     ; 받아온 파일이름 출력
+    ;print BUFFER_START     ; 받아온 파일이름 출력
     print newline
 
     mov bl, buffer[1]
