@@ -25,8 +25,6 @@ ENDM
 
 chgInt3:
     
-    ;cli
-
     mov ax, 3503h
     int 21h
     mov WORD PTR keep_orgint3, bx
@@ -41,8 +39,6 @@ chgInt3:
     int 21h
 
     pop ds
-
-    ;sti
 
     print prompt1
 
@@ -106,11 +102,10 @@ exitGetC:
 
 
 rcvInt3:
-    ;cli
+   
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
-    ;sti
 
 closeFile:
     pop bx

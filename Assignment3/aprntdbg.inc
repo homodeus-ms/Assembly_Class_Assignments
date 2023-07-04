@@ -6,13 +6,19 @@ int3_handler PROC
     mov dx, di
     mov ah, 09h
     int 21h
-
+    
     push ds
 
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
+
     int 3h
+    
+    pop ds
+    
+
+    push ds
 
     mov ax, cs
     mov ds, ax
