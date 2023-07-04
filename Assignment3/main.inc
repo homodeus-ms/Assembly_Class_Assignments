@@ -91,7 +91,7 @@ loopGetC:
     mov dl, al
     mov bl, [BUFFER_START+si]
     
-    assert dx, bx, astMsg
+    assert bx, dx, astMsg
 
     inc si
     loop loopGetC
@@ -106,6 +106,7 @@ rcvInt3:
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
+
 
 closeFile:
     pop bx
