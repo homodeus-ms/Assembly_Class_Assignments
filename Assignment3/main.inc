@@ -1,7 +1,7 @@
 .DATA
-prompt1 DB "=== Type File Name ===",10,13,'$'
-prompt2 DB "=== Type follow sentence ===",10,13,'$'
-astMsg DB "YOU MISSED TYPED!",10,13,'$'
+prompt1 DB "=== Type File Name ===",13,10,'$'
+prompt2 DB "=== Type follow sentence ===",13,10,'$'
+astMsg DB "YOU MISSED TYPED!",13,10,'$'
 
 BUFFER_SIZE EQU 255
 BUFFER_START EQU buffer+2
