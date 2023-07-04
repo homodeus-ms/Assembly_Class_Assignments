@@ -68,7 +68,7 @@ getFileName:
 
 openFile:
     mov ah, 3dh            ; 파일 열기
-    mov al, 00100000b
+    mov al, 00h
     mov dx, OFFSET BUFFER_START
     int 21h
 
