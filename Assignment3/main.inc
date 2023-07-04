@@ -23,8 +23,9 @@ ENDM
 add$AtTheEnd MACRO n
     mov bl, n
     xor bh, bh
-    mov [bx+BUFFER_START], '$'
-    mov [bx+BUFFER_START+1], '0'
+    ; [bx+BUFFER_START], '$'
+    mov [bx+BUFFER_START], 00h
+    mov [bx+BUFFER_START+1], '$'
 ENDM
 
 ; 코드 시작
