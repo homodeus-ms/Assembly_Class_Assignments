@@ -25,10 +25,9 @@ ENDM
 
 chgInt3:
     
-    cli
+    ;cli
 
-    mov al, 3
-    mov ah, 35h
+    mov ax, 3503h
     int 21h
     mov WORD PTR keep_orgint3, bx
     mov WORD PTR keep_orgint3+2, es
@@ -43,7 +42,7 @@ chgInt3:
 
     pop ds
 
-    sti
+    ;sti
 
     print prompt1
 
@@ -51,9 +50,8 @@ getFileName:
     mov ah, 0ah            
     mov dx, OFFSET buffer
     int 21h
-
-    ;print BUFFER_START     ; 받아온 파일이름 출력
-    print newline
+    
+    print newline    ; 받아온 이름에 뉴라인만 출력함
 
     mov bl, buffer[1]
     xor bh, bh
@@ -62,30 +60,31 @@ getFileName:
     print prompt2
 
 openFile:
-    mov ah, 3dh            ; 파일 열기
-    mov al, 00h
+    mov ax, 3D00h    ; 파일 열기
     mov dx, OFFSET BUFFER_START
     int 21h
 
-    push ax
+    push ax    ; file handle 보관
 
 readFile:
-    mov bx, ax              ; 파일 내용 읽어오기
+    mov bx, ax                    ; 파일 내용 읽어오기
     mov cx, 255
     mov dx, OFFSET BUFFER_START
-    mov ah, 3fh
+    mov ah, 3Fh
     int 21h
 
-    mov bx, ax
+    mov bx, ax                    ; 실제 읽어온 길이가 ax에
+    mov cx, ax                    ; 읽어온 문자열 길이를 cx에
     mov [bx+BUFFER_START], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
     print BUFFER_START            ; 출력하기
     print newline
 
 preLoopGetC:
     mov ah, 01h
+    mov si, 0        ; si = 인덱스
     
-    mov si, 0        ; bx = 읽어온 문자열의 길이, si = 인덱스
-    mov dh, 0        ; 밑에서 dl에 al을 넣고 dx를 assert로 보낼것임
+    xor dh, dh       ; 밑에서 읽어온문자를 dx에, 원소스는 bx에
+    xor bh, bh
     mov di, OFFSET astMsg
 
 loopGetC:
@@ -93,29 +92,25 @@ loopGetC:
     cmp al, 0dh
     je exitGetC
 
-    mov dl, al        ; dx에 읽어온 글자
-    mov cl, [BUFFER_START+si]
-    xor ch, ch
+    mov dl, al
+    mov bl, [BUFFER_START+si]
     
-    assert dx, cx, astMsg
+    assert dx, bx, astMsg
 
     inc si
-    cmp si, bx
-    jne loopGetC
-    
+    loop loopGetC
 
 exitGetC:
-    ;mov [BUFFER_START+di], '$'
-    ;print BUFFER_START
+    
     print newline
 
 
 rcvInt3:
-    cli
+    ;cli
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
-    sti
+    ;sti
 
 closeFile:
     pop bx
