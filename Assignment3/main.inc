@@ -20,13 +20,6 @@ print MACRO m
     int 21h
 ENDM
 
-add$AtTheEnd MACRO n
-    mov bl, n
-    xor bh, bh
-    ; [bx+BUFFER_START], '$'
-    mov [bx+BUFFER_START], 00h
-    mov [bx+BUFFER_START+1], '$'
-ENDM
 
 ; 코드 시작
 
@@ -58,11 +51,17 @@ getFileName:
     mov ah, 0ah            
     mov dx, OFFSET buffer
     int 21h
-    add$AtTheEnd buffer+1
 
-    ;print BUFFER_START     ; 받아온 파일이름 출력
+    mov bl, buffer[1]
+    xor bh, bh
+    mov [bx+BUFFER_START], '$'
+
+    print BUFFER_START     ; 받아온 파일이름 출력
     print newline
 
+    mov bl, buffer[1]
+    xor bh, bh
+    mov [bx+BUFFER_START], 00h
 
     print prompt2
 
