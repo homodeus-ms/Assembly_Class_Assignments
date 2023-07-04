@@ -6,7 +6,7 @@ astMsg DB "YOU MISSED TYPED!",10,13,'$'
 BUFFER_SIZE EQU 255
 BUFFER_START EQU buffer+2
 buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP (?), '$'
-newline DB 10, 13, '$'
+newline DB 0Dh, 0Ah, '$'
 
 keep_orgint3 DD ?
 
@@ -60,7 +60,7 @@ getFileName:
     int 21h
     add$AtTheEnd buffer+1
 
-    print BUFFER_START     ; 받아온 파일이름 출력
+    ;print BUFFER_START     ; 받아온 파일이름 출력
     print newline
 
 
