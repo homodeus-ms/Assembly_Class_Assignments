@@ -6,7 +6,7 @@ astMsg DB "YOU MISSED TYPED!",10,13,'$'
 BUFFER_SIZE EQU 255
 BUFFER_START EQU buffer+2
 buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP (?), '$'
-newline DB 0Dh, 0Ah, '$'
+newline DB 0Ah, 0Dh, '$'
 
 keep_orgint3 DD ?
 
