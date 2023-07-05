@@ -114,7 +114,7 @@ putabs:
     jmp continue
 
 printResult:
-    print prompt0
+    
     print result
 
 exit0:
