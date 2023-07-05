@@ -6,6 +6,7 @@ TITLE Formatted Print
 .MODEL TINY
 
 .DATA
+prompt0 DB "my string: ", '$'
 prompt1 DB "=== Type Formatted String ===", 13, 10, '$'
 prompt2 DB "=== Type First Number ===", 13, 10, '$'
 prompt3 DB "=== Type Second Number ===", 13, 10, '$'
@@ -13,6 +14,7 @@ prompt3 DB "=== Type Second Number ===", 13, 10, '$'
 MAX_LENGTH EQU 255
 buffer DB MAX_LENGTH, 0, MAX_LENGTH DUP('$'), '$'
 result DB MAX_LENGTH DUP ('$'), '$'
+
 
 num1 DB ?
 num2 DB ?
@@ -25,6 +27,7 @@ abs DB ?
 INCLUDE macros.mac
 
     print prompt1    ; format 받기
+    print prompt0
 
     lea dx, buffer
     mov ah, 0Ah
@@ -112,8 +115,9 @@ putabs:
     jmp continue
 
 printResult:
+    print prompt0
     print result
-    
+
 exit0:
     mov ah, 4ch
     xor al, al
