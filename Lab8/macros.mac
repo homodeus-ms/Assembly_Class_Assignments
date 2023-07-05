@@ -1,0 +1,19 @@
+convertToInt MACRO n
+    xor ah, ah
+    mov bx, '0'
+    sub ax, bx
+    mov n, al
+    
+ENDM
+
+print MACRO s
+    mov ah, 09h
+    lea dx, s
+    int 21h
+ENDM
+
+readChar MACRO
+    mov ah, 01h
+    int 21h
+ENDM
+
