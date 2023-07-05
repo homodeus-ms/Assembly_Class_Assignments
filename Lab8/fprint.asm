@@ -26,7 +26,6 @@ abs DB ?
 
 INCLUDE macros.mac
 
-    print prompt1    ; format 받기
     print prompt0
 
     lea dx, buffer

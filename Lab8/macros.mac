@@ -13,7 +13,7 @@ print MACRO s
 ENDM
 
 readChar MACRO
-    mov ah, 01h
+    mov ah, 07h
     int 21h
 ENDM
 
