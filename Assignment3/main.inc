@@ -5,7 +5,7 @@ astMsg DB "YOU MISSED TYPED!",13,10,'$'
 
 BUFFER_SIZE EQU 255
 BUFFER_START EQU buffer+2
-buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP (0), '$'
+buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP (?), '$'
 newline DB 0Dh, 0Ah, '$'
 
 keep_orgint3 DD ?
@@ -49,9 +49,9 @@ getFileName:
     
     print newline    ; 받아온 이름에 뉴라인만 출력함
 
-    ;mov bl, buffer[1]
-    ;xor bh, bh
-    ;mov [bx+BUFFER_START], 00h
+    mov bl, buffer[1]
+    xor bh, bh
+    mov [bx+BUFFER_START], 00h
 
     print prompt2
 
