@@ -1,7 +1,6 @@
 int3_handler PROC
     sti
     push ax
-    push bx
     push dx
 
     mov dx, di
@@ -30,7 +29,6 @@ int3_handler PROC
     pop ds
 
     pop dx
-    pop bx
     pop ax
 
     iret

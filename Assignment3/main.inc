@@ -10,6 +10,7 @@ FILENAME_SIZE EQU 12
 filename DB FILENAME_SIZE, 0, FILENAME_SIZE DUP (?), '$'
 FILENAME_START EQU filename+2
 newline DB 0Dh, 0Ah, '$'
+zero DW 0, 0
 
 keep_orgint3 DD ?
 
@@ -23,25 +24,39 @@ print MACRO m
     int 21h
 ENDM
 
-
 ; 코드 시작
 
 chgInt3:
-    
-    mov ax, 3503h
-    int 21h
-    mov WORD PTR keep_orgint3, bx
-    mov WORD PTR keep_orgint3+2, es
-    
-    mov bx, ds
 
-    mov ax, cs
-    mov ds, ax
-    mov dx, OFFSET int3_handler
-    mov ax, 2503h
-    int 21h
+    mov cx, ds
+    mov ds, zero
+    mov bx, 0ch
+    mov ax, [bx]
+    mov dx, [bx+2]
+    mov ds, cx
+    mov WORD PTR keep_orgint3, ax
+    mov WORD PTR keep_orgint3+2, dx
 
-    mov ds, bx
+    mov ax, OFFSET int3_handler
+    mov ds, zero
+    mov [bx], ax
+    mov [bx+2], cs
+    mov ds, cx
+    
+    ;mov ax, 3503h
+    ;int 21h
+    ;mov WORD PTR keep_orgint3, bx
+    ;mov WORD PTR keep_orgint3+2, es
+    
+    ;mov bx, ds
+
+    ;mov ax, cs
+    ;mov ds, ax
+    ;mov dx, OFFSET int3_handler
+    ;mov ax, 2503h
+    ;int 21h
+
+    ;mov ds, bx
 
     print prompt1
 
@@ -81,11 +96,7 @@ readFile:
     print BUFFER_START            ; 출력하기
 
 preLoopGetC:
-    ;mov ah, 01h
-
-    ;xor dh, dh       ; 밑에서 읽어온문자는 ax에, 원소스는 dx에
-    mov bh, 01h
-    ;mov di, OFFSET astMsg
+    xor bh, bh
 
 loopGetC:
     mov ah, 01h
@@ -93,8 +104,7 @@ loopGetC:
     cmp al, 0Dh
     jz exitGetC
 
-    ;xor ah, ah
-    ;mov dl, al
+    xor ah, ah
     mov bl, [si]
     
     assert bx, ax, astMsg
