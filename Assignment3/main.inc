@@ -90,6 +90,8 @@ readFile:
 
     mov bx, ax                    ; 실제 읽어온 길이가 ax에
     mov cx, ax                    ; 읽어온 문자열 길이를 cx에
+    jcxz exitGetC
+
     mov BYTE PTR [bx+si], 0Dh
     mov BYTE PTR [bx+si+1], 0Ah
     
