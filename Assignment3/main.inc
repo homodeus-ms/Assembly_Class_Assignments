@@ -32,7 +32,7 @@ chgInt3:
     int 21h
     mov WORD PTR keep_orgint3, bx
     mov WORD PTR keep_orgint3+2, es
-
+    
     mov bx, ds
 
     mov ax, cs
@@ -82,37 +82,35 @@ readFile:
     ;print newline
 
 preLoopGetC:
-    mov ah, 01h
-    lea si, BUFFER_START
-    
-    xor dh, dh       ; 밑에서 읽어온문자를 dx에, 원소스는 bx에
+    ;mov ah, 01h
+
+    ;xor dh, dh       ; 밑에서 읽어온문자는 ax에, 원소스는 dx에
     xor bh, bh
-    mov di, OFFSET astMsg
+    ;mov di, OFFSET astMsg
 
 loopGetC:
+    mov ah, 01h
     int 21h
-    cmp al, 0dh
-    je exitGetC
+    cmp al, 0Dh
+    jz exitGetC
 
-    mov dl, al
+    xor ah, ah
+    ;mov dl, al
     mov bl, [si]
     
-    assert bx, dx, astMsg
+    assert bx, ax, astMsg
 
     inc si
     loop loopGetC
 
 exitGetC:
-    
     print newline
-
 
 rcvInt3:
    
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
-
 
 closeFile:
     pop bx
@@ -121,6 +119,5 @@ closeFile:
 
 exitProgram:
 
-    mov ah, 4ch
-    xor al, al
+    mov ax, 4c00h
     int 21h
