@@ -5,7 +5,10 @@ astMsg DB "YOU MISSED TYPED!",13,10,'$'
 
 BUFFER_SIZE EQU 255
 BUFFER_START EQU buffer+2
-buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP (?), '$'
+buffer DB BUFFER_SIZE, 0, BUFFER_SIZE DUP ('$'), '$'
+FILENAME_SIZE EQU 12
+filename DB FILENAME_SIZE, 0, FILENAME_SIZE DUP (?), '$'
+FILENAME_START EQU filename+2
 newline DB 0Dh, 0Ah, '$'
 
 keep_orgint3 DD ?
@@ -44,36 +47,39 @@ chgInt3:
 
 getFileName:
     mov ah, 0Ah            
-    mov dx, OFFSET buffer
+    mov dx, OFFSET filename
     int 21h
     
     print newline    ; 받아온 이름에 뉴라인만 출력함
 
-    mov bl, buffer[1]
+    mov bl, filename[1]
     xor bh, bh
-    mov [bx+BUFFER_START], 00h
+    mov BYTE PTR [bx+FILENAME_START], 00h
 
     print prompt2
 
 openFile:
     mov ax, 3D00h    ; 파일 열기
-    mov dx, OFFSET BUFFER_START
+    mov dx, OFFSET FILENAME_START
     int 21h
 
     push ax    ; file handle 보관
 
 readFile:
+    lea si, BUFFER_START
     mov bx, ax                    ; 파일 내용 읽어오기
     mov cx, 255
-    mov dx, OFFSET BUFFER_START
+    mov dx, si
     mov ah, 3Fh
     int 21h
 
     mov bx, ax                    ; 실제 읽어온 길이가 ax에
     mov cx, ax                    ; 읽어온 문자열 길이를 cx에
-    mov [bx+BUFFER_START], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
+    mov BYTE PTR [bx+si], 0Dh
+    mov BYTE PTR [bx+si+1], 0Ah
+    ;mov BYTE PTR [bx+si+2], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
     print BUFFER_START            ; 출력하기
-    print newline
+    ;print newline
 
 preLoopGetC:
     mov ah, 01h
