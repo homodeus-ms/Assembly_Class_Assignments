@@ -43,7 +43,7 @@ chgInt3:
     print prompt1
 
 getFileName:
-    mov ah, 0ah            
+    mov ah, 0Ah            
     mov dx, OFFSET buffer
     int 21h
     
@@ -60,40 +60,38 @@ openFile:
     mov dx, OFFSET BUFFER_START
     int 21h
 
-    ;push ax    ; file handle 보관
-    mov bx, ax    ; file handle을 bx에 보관 계속 사용
+    push ax    ; file handle 보관
 
 readFile:
-    ;mov bx, ax                    ; 파일 내용 읽어오기
+    mov bx, ax                    ; 파일 내용 읽어오기
     mov cx, 255
     mov dx, OFFSET BUFFER_START
     mov ah, 3Fh
     int 21h
 
-    ;mov bx, ax                    ; 실제 읽어온 길이가 ax에 있음
+    mov bx, ax                    ; 실제 읽어온 길이가 ax에
     mov cx, ax                    ; 읽어온 문자열 길이를 cx에
-    mov di, ax
-    mov [di+BUFFER_START], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
+    mov [bx+BUFFER_START], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
     print BUFFER_START            ; 출력하기
     print newline
 
 preLoopGetC:
     mov ah, 01h
-    mov si, 0h        ; si = 인덱스
+    lea si, BUFFER_START
     
-    mov dh, 01h      ; 밑에서 읽어온문자를 dx에, 원소스는 bx에
-    ;xor bh, bh       ; => change, 읽어온것 ax, 원소스 dl, dh도 01h로
-    ;mov di, OFFSET astMsg
+    xor dh, dh       ; 밑에서 읽어온문자를 dx에, 원소스는 bx에
+    xor bh, bh
+    mov di, OFFSET astMsg
 
 loopGetC:
     int 21h
     cmp al, 0dh
     je exitGetC
 
-    ;mov dl, al
-    mov dl, [BUFFER_START+si]
+    mov dl, al
+    mov bl, [si]
     
-    assert dx, ax, astMsg
+    assert bx, dx, astMsg
 
     inc si
     loop loopGetC
@@ -102,17 +100,21 @@ exitGetC:
     
     print newline
 
+
 rcvInt3:
    
     lds dx, keep_orgint3
     mov ax, 2503h
     int 21h
 
+
 closeFile:
+    pop bx
     mov ah, 3eh
     int 21h
 
 exitProgram:
 
-    mov ax, 4c00h
+    mov ah, 4ch
+    xor al, al
     int 21h
