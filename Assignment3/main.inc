@@ -77,15 +77,14 @@ readFile:
     mov cx, ax                    ; 읽어온 문자열 길이를 cx에
     mov BYTE PTR [bx+si], 0Dh
     mov BYTE PTR [bx+si+1], 0Ah
-    ;mov BYTE PTR [bx+si+2], '$'    ; 읽어온 문자열 마지막에 '$' 붙이고
+    
     print BUFFER_START            ; 출력하기
-    ;print newline
 
 preLoopGetC:
     ;mov ah, 01h
 
     ;xor dh, dh       ; 밑에서 읽어온문자는 ax에, 원소스는 dx에
-    xor bh, bh
+    mov bh, 01h
     ;mov di, OFFSET astMsg
 
 loopGetC:
@@ -94,7 +93,7 @@ loopGetC:
     cmp al, 0Dh
     jz exitGetC
 
-    xor ah, ah
+    ;xor ah, ah
     ;mov dl, al
     mov bl, [si]
     
