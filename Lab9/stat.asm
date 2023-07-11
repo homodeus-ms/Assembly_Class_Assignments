@@ -16,7 +16,7 @@ readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
 
-res0 DB 0, 0, 0, '.'
+res0 DB 0, 0, '.'
 res1 DB 0, 0, 0, '$'
 
 newLine DB 0Dh, 0Ah, '$'
@@ -91,52 +91,40 @@ getMicro:
     fidiv thousand
 
 saveAverage:
-    frndint
+    ;frndint
     fistp average
     fwait
 
     xor dx, dx
     mov ax, average
     mov bx, OFFSET res1 - 1
-    mov di, OFFSET saveIntPart
 
-setSi3:
+setSi3:    ; for floating part
     mov si, 3
-    jmp printSum
-setSi2:
-    mov si, 2
 
-
-printSum:
+convertFloatingPart:
     xor dx, dx
     div ten
     add dx, '0'
     mov [bx+si], dl
     
     dec si
-    jnz printSum
-    jmp di
-    
-saveIntPart:
-    
-    mov di, OFFSET Exit0
-    lea bx, res0
-    cmp cl, 'm'
-    je setSi2
-    dec bx
-    jmp setSi3
+    jnz convertFLoatingPart
+    ;jmp di
 
-Exit0:
-    cmp cl, 'm'
-    jne printMicro
+setSi2:
+    mov si, 2
+    mov bx, OFFSET res0 - 1
 
-printMilli:
-    print res0 + 1
-    jmp closeFile
+convertIntPart:
+    xor dx, dx
+    div ten
+    add dx, '0'
+    mov [bx+si], dl
     
-printMicro:
-    cmp res0, '0'
-    je printMilli
+    dec si
+    jnz convertIntPart
+    
     print res0
 
 closeFile:
