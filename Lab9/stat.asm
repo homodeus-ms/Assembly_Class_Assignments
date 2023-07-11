@@ -15,6 +15,7 @@ average DW 0
 readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
+half DQ 3FE0000000000000h
 
 res0 DB 0, 0, '.'
 res1 DB 0, 0, 0, '$'
@@ -92,6 +93,8 @@ getMicro:
 
 saveAverage:
     ;frndint
+    fld half
+    fadd
     fistp average
     fwait
 
