@@ -2,16 +2,16 @@
 	pmark=
 	version=3
 [debug-]
-	target="a:\prac\test.exe"
+	target="a:\prac\8087tst1.com"
 	synonym=;A:\PRAC
-	memwin=vm1b DS:0 
+	memwin=vm1b ds:0x011c 
 [cv]
 	wndstate=0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1
 	wndstate=1 80 5 0 1 0 0 0 0 0 0 0 0 0 -1
 	wndstate=2 34 4 33 1 0 0 0 0 0 0 0 0 0 -1
-	wndstate=3 80 13 0 6 0 1 0 0 0 20 19 0 0 -1
+	wndstate=3 80 13 0 6 0 1 0 0 0 136 128 0 0 -1
 	wndstate=4 67 7 3 8 0 0 0 0 0 0 0 0 0 -1
-	wndstate=5 67 6 0 1 0 1 0 0 0 0 0 0 0 -1
+	wndstate=5 67 6 0 1 0 1 0 0 0 22 22 0 0 -1
 	wndstate=6 67 4 3 15 0 0 0 0 0 0 0 0 0 -1
 	wndstate=7 13 23 67 1 1 1 0 0 0 0 0 0 0 -1
 	wndstate=8 67 4 0 16 0 0 0 0 0 0 0 0 0 -1

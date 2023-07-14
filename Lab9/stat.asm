@@ -18,8 +18,7 @@ thousand DW 1000
 ten DW 0Ah
 half DQ 3FE0000000000000h
 
-res0 DB 0, 0, '.'
-res1 DB 0, 0, 0, '$'
+res0 DB 0, 0, '.', 0, 0, 0, '$'
 
 newLine DB 0Dh, 0Ah, '$'
 
@@ -101,33 +100,31 @@ saveAverage:
 
     xor dx, dx
     mov ax, average
-    mov bx, OFFSET res1 - 1
+    mov bx, OFFSET res0
 
-setSi3:    ; for floating part
-    mov si, 3
+    mov si, 5
 
-convertFloatingPart:
+convertLoop:
     xor dx, dx
     div ten
     add dx, '0'
     mov [bx+si], dl
     
     dec si
-    jnz convertFLoatingPart
-    ;jmp di
+    cmp si, 2
+    jnz convertLoop
 
-setSi2:
-    mov si, 2
-    mov bx, OFFSET res0 - 1
-
-convertIntPart:
+    dec si
     xor dx, dx
     div ten
     add dx, '0'
     mov [bx+si], dl
-    
+
     dec si
-    jnz convertIntPart
+    xor dx, dx
+    div ten
+    add dx, '0'
+    mov [bx+si], dl
     
     print res0
 
