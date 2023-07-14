@@ -49,7 +49,7 @@ ENDM
     push ax
     mov bx, ax
 
-    print newLine
+    ;print newLine
 
     ; ===== 파일 읽어와서 연산 =====
 
