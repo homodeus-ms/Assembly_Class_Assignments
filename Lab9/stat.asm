@@ -12,6 +12,7 @@ prompt DB "fileName?", 0Dh, 0Ah, '$'
 secUnit DB ?
 readNum DQ ?
 average DW 0
+
 readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
@@ -92,9 +93,9 @@ getMicro:
     fidiv thousand
 
 saveAverage:
-    ;frndint
-    fld half
-    fadd
+    frndint
+    ;fld half
+    ;fadd
     fistp average
     fwait
 
