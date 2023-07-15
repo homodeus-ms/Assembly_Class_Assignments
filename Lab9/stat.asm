@@ -6,7 +6,7 @@ TITLE Stat Printer
 .MODEL TINY
 
 .DATA
-MAX_NAME EQU 12
+MAX_NAME EQU 250
 fileName DB MAX_NAME, 0, MAX_NAME DUP (?), '$'
 prompt DB "Name?", 0Dh, 0Ah, '$'
 secUnit DB ?
