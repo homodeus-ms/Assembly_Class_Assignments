@@ -2,16 +2,16 @@
 	pmark=
 	version=3
 [debug-]
-	target="a:\lab9\stat.com"
+	target="a:\lab9\test0.com"
 	synonym=;A:\LAB9
-	memwin=vm1b ds:0x02d8 
+	memwin=vm1b ds:0x0131 
 [cv]
 	wndstate=0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1
 	wndstate=1 80 5 0 1 0 0 0 0 0 0 0 0 0 -1
 	wndstate=2 34 4 33 1 0 0 0 0 0 0 0 0 0 -1
-	wndstate=3 80 13 0 6 0 1 0 0 0 233 229 0 0 -1
+	wndstate=3 80 13 0 6 0 1 0 0 0 130 128 0 0 -1
 	wndstate=4 67 7 3 8 0 0 0 0 0 0 0 0 0 -1
-	wndstate=5 67 5 0 1 0 1 0 0 0 56 56 0 0 -1
+	wndstate=5 67 5 0 1 0 1 0 0 0 24 24 0 0 -1
 	wndstate=6 67 4 3 15 0 0 0 0 0 0 0 0 0 -1
 	wndstate=7 13 23 67 1 1 1 0 0 0 0 0 0 0 -1
 	wndstate=8 67 4 0 16 0 0 0 0 0 0 0 0 0 -1
