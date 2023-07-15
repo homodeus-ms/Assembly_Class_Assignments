@@ -81,7 +81,8 @@ readAddLoop:
     cmp ax, 0
     je saveResult
 
-    fadd readNum
+    fld readNum
+    fadd
     fwait
     inc si
     jmp readAddLoop
@@ -116,24 +117,30 @@ convertLoop:
     xor dx, dx
     div ten
     add [bx+5], dl
-    ;mov [bx+5], dl
+    cmp ax, 0
+    je printRes0
     
     xor dx, dx
     div ten
     add [bx+4], dl
+    cmp ax, 0
+    je printRes0
 
     xor dx, dx
     div ten
     add [bx+3], dl
+    cmp ax, 0
+    je printRes0
 
     xor dx, dx
     div ten
     add [bx+1], dl
+    cmp ax, 0
+    je printRes0
 
     xor dx, dx
     div ten
     add [bx], dl
-    
 
 printRes0:
     
