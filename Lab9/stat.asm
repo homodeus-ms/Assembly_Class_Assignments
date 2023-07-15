@@ -19,7 +19,7 @@ readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
 
-res0 DB 0, 0, '.', 0, 0, 0, '$'
+res0 DB '0', '0', '.', '0', '0', '0', '$'
 newLine DB 0Dh, 0Ah, '$'
 
 .CODE
@@ -37,6 +37,8 @@ endprog MACRO
 ENDM
 
     finit
+    fldz
+    fwait
 
     print prompt
 
@@ -69,18 +71,13 @@ ENDM
 
     ; loop 시작
     mov cx, 8
-    mov ah, 3Fh
     lea dx, readNum
     xor si, si
-
-    fldz
-    fwait
 
 readAddLoop:
     mov ah, 3Fh
     int 21h
     cmp ax, 8
-
     jne saveResult
 
     fadd readNum
@@ -92,8 +89,8 @@ saveResult:
 
     mov cl, secUnit       ; cl에 m or u 저장
     mov readCnt, si
-
-    fidiv readCnt         ; get Average
+    
+    fidiv readCnt        ; get Average
     fwait
 
     cmp cl, 'm'
@@ -106,20 +103,18 @@ getMicro:
 
 saveAverage:
     
-    ;frndint
     fistp average2
     fwait
 
-    mov dx, WORD PTR average2
-    mov average, dx
-
-    xor dx, dx
-    mov ax, average
+    mov ax, WORD PTR average2
     mov bx, OFFSET res0
 
     mov si, 5
-
+    
 convertLoop:
+    cmp ax, 0
+    je printRes0
+
     xor dx, dx
     div ten
     add dx, '0'
@@ -140,6 +135,8 @@ convertLoop:
     div ten
     add dx, '0'
     mov [bx+si], dl
+
+printRes0:
     
     print res0
 

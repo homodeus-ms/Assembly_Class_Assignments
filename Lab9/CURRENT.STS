@@ -4,16 +4,16 @@
 [debug-]
 	target="a:\lab9\stat.com"
 	synonym=;A:\LAB9
-	memwin=vm1b ds:0x02e4 
+	memwin=vm1b ds:0x02d8 
 [cv]
 	wndstate=0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1
 	wndstate=1 80 5 0 1 0 0 0 0 0 0 0 0 0 -1
 	wndstate=2 34 4 33 1 0 0 0 0 0 0 0 0 0 -1
-	wndstate=3 80 13 0 6 0 1 0 0 0 176 176 0 0 -1
+	wndstate=3 80 13 0 6 0 1 0 0 0 233 229 0 0 -1
 	wndstate=4 67 7 3 8 0 0 0 0 0 0 0 0 0 -1
-	wndstate=5 67 5 0 1 1 1 0 0 0 57 57 0 0 -1
+	wndstate=5 67 5 0 1 0 1 0 0 0 56 56 0 0 -1
 	wndstate=6 67 4 3 15 0 0 0 0 0 0 0 0 0 -1
-	wndstate=7 13 23 67 1 0 1 0 0 0 0 0 0 0 -1
+	wndstate=7 13 23 67 1 1 1 0 0 0 0 0 0 0 -1
 	wndstate=8 67 4 0 16 0 0 0 0 0 0 0 0 0 -1
 	wndstate=9 80 5 0 19 0 1 0 1 0 2 0 0 0 -1
 	command=use auto
