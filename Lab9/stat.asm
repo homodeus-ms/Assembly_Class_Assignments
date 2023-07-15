@@ -77,8 +77,8 @@ ENDM
 readAddLoop:
     mov ah, 3Fh
     int 21h
-    cmp ax, 8
-    jne saveResult
+    cmp ax, 0
+    je saveResult
 
     fadd readNum
     fwait
