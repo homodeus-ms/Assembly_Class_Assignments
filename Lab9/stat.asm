@@ -16,12 +16,9 @@ average DW 0
 readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
-half DQ 3FE0000000000000h
 
 res0 DB 0, 0, '.', 0, 0, 0, '$'
-
 newLine DB 0Dh, 0Ah, '$'
-
 
 .CODE
 .STARTUP
@@ -49,7 +46,7 @@ ENDM
     push ax
     mov bx, ax
 
-    ;print newLine
+    print newLine
 
     ; ===== 파일 읽어와서 연산 =====
 
@@ -65,6 +62,9 @@ ENDM
     lea dx, readNum
     xor si, si
 
+    finit
+
+    wait
     fldz
     fwait
 
@@ -74,6 +74,8 @@ readAddLoop:
     cmp ax, 8
     jne saveResult
 
+    wait
+
     fadd readNum
     fwait
     inc si
@@ -82,6 +84,9 @@ readAddLoop:
 saveResult:
     mov cl, secUnit       ; cl에 m or u 저장
     mov readCnt, si
+
+    wait
+
     fidiv readCnt         ; get Average
     fwait
 
@@ -89,12 +94,13 @@ saveResult:
     je saveAverage
 
 getMicro:
+    wait
     fidiv thousand
+    fwait
 
 saveAverage:
+    wait
     frndint
-    ;fld half
-    ;fadd
     fistp average
     fwait
 
