@@ -13,6 +13,8 @@ secUnit DB ?
 readNum DQ ?
 average DW 0
 
+average2 DD 0
+
 readCnt DW ?
 thousand DW 1000
 ten DW 0Ah
@@ -26,6 +28,11 @@ newLine DB 0Dh, 0Ah, '$'
 print MACRO m
     mov ah, 09h
     lea dx, m
+    int 21h
+ENDM
+
+endprog MACRO
+    mov ax, 4c00h
     int 21h
 ENDM
 
@@ -66,9 +73,6 @@ ENDM
     lea dx, readNum
     xor si, si
 
-    finit
-
-    wait
     fldz
     fwait
 
@@ -76,9 +80,8 @@ readAddLoop:
     mov ah, 3Fh
     int 21h
     cmp ax, 8
-    jne saveResult
 
-    wait
+    jne saveResult
 
     fadd readNum
     fwait
@@ -86,10 +89,9 @@ readAddLoop:
     jmp readAddLoop
 
 saveResult:
+
     mov cl, secUnit       ; cl에 m or u 저장
     mov readCnt, si
-
-    wait
 
     fidiv readCnt         ; get Average
     fwait
@@ -98,15 +100,18 @@ saveResult:
     je saveAverage
 
 getMicro:
-    wait
+    
     fidiv thousand
     fwait
 
 saveAverage:
-    wait
-    frndint
-    fistp average
+    
+    ;frndint
+    fistp average2
     fwait
+
+    mov dx, WORD PTR average2
+    mov average, dx
 
     xor dx, dx
     mov ax, average
@@ -143,8 +148,6 @@ closeFile:
     mov ah, 3Eh
     int 21h
 
-    mov ah, 4ch
-    xor al, al
-    int 21h
+    endprog
 
 END
