@@ -109,32 +109,31 @@ saveAverage:
     mov ax, WORD PTR average2
     mov bx, OFFSET res0
 
-    mov si, 5
+    ;mov si, 5
     
 convertLoop:
-    cmp ax, 0
-    je printRes0
 
     xor dx, dx
     div ten
-    add dx, '0'
-    mov [bx+si], dl
+    add [bx+5], dl
+    ;mov [bx+5], dl
     
-    dec si
-    cmp si, 2
-    jnz convertLoop
-
-    dec si
     xor dx, dx
     div ten
-    add dx, '0'
-    mov [bx+si], dl
+    add [bx+4], dl
 
-    dec si
     xor dx, dx
     div ten
-    add dx, '0'
-    mov [bx+si], dl
+    add [bx+3], dl
+
+    xor dx, dx
+    div ten
+    add [bx+1], dl
+
+    xor dx, dx
+    div ten
+    add [bx], dl
+    
 
 printRes0:
     
