@@ -6,8 +6,8 @@ TITLE Stat Printer
 .MODEL TINY
 
 .DATA
-MAX_NAME EQU 12
-fileName DB MAX_NAME, 0, MAX_NAME DUP ('$'), '$'
+MAX_NAME EQU 128
+fileName DB MAX_NAME, 0, MAX_NAME DUP (?), '$'
 prompt DB "fileName?", 0Dh, 0Ah, '$'
 secUnit DB ?
 readNum DQ ?
@@ -37,6 +37,10 @@ ENDM
     mov ah, 0Ah
     lea dx, fileName
     int 21h
+
+    xor bh, bh
+    mov bl, BYTE PTR filename+1
+    mov [bx+filename+2], '$'
 
     ; 파일 오픈
     mov ax, 3D00h
