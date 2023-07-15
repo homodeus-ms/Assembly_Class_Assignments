@@ -17,6 +17,7 @@ average2 DD 0
 
 readCnt DW ?
 thousand DW 1000
+onebytsnd DQ 3F50624DD2F1A9FCh
 ten DW 0Ah
 
 res0 DB '0', '0', '.', '0', '0', '0', '$'
@@ -98,7 +99,8 @@ saveResult:
 
 getMicro:
     
-    fidiv thousand
+    fld onebytsnd
+    fmul
     fwait
 
 saveAverage:
@@ -108,8 +110,6 @@ saveAverage:
 
     mov ax, WORD PTR average2
     mov bx, OFFSET res0
-
-    ;mov si, 5
     
 convertLoop:
 
