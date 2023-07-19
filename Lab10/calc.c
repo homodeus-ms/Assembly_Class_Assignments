@@ -16,12 +16,9 @@ void parse_rpn(const char* line, op_t* ops, double* operands, const size_t count
         if (*p == ' ') {
             ++p;
             continue;
-        }
-        else if ((*p == '+' || *p == '-' || *p == '*' || *p == '/')
-            && (*(p + 1) == ' ' || *(p + 1) == '\0')) {
+        } else if ((*p == '+' || *p == '-' || *p == '*' || *p == '/') && (*(p + 1) == ' ' || *(p + 1) == '\0')) {
 
-            switch (*p)
-            {
+            switch (*p) {
             case '+':
                 ops[idx] = OP_ADD;
                 break;
@@ -40,8 +37,8 @@ void parse_rpn(const char* line, op_t* ops, double* operands, const size_t count
             }
 
             ++p;
-        }
-        else {
+        } else {
+
             ops[idx] = OP_LOAD;
             sscanf(p, "%lf", &temp);
             operands[idx] = temp;
@@ -70,10 +67,8 @@ void calculate(const op_t* op, const double* operands)
         if (op[i] == OP_LOAD) {
             eprpc_load(operands[i++]);
             continue;
-        }
-        else {
-            switch (op[i++])
-            {
+        } else {
+            switch (op[i++]) {
             case OP_ADD:
                 eprpc_add();
                 break;

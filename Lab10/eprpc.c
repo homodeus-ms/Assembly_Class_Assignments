@@ -32,32 +32,36 @@ void eprpc_get_result(double* out_result)
     }
 }
 
-void eprpc_add(void)
+void __declspec(naked) eprpc_add(void)
 {
     __asm {
         fadd
         fwait
+        ret
     }
 }
-void eprpc_sub(void)
+void __declspec(naked) eprpc_sub(void)
 {
     __asm {
         fsub
         fwait
+        ret
     }
 }
-void eprpc_mul(void)
+void __declspec(naked) eprpc_mul(void)
 {
     __asm {
         fmul
         fwait
+        ret
     }
 }
-void eprpc_div(void)
+void __declspec(naked) eprpc_div(void)
 {
     __asm {
         fdiv
         fwait
+        ret
     }
 }
 
