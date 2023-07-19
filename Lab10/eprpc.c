@@ -6,7 +6,6 @@ void __declspec(naked) eprpc_init(void)
 {
     __asm {
         finit
-        fldz
         ret
     }
 }
