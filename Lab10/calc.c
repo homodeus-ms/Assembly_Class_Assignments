@@ -36,7 +36,6 @@ void parse_rpn(const char* line, op_t* ops, double* operands, const size_t count
                 break;
             }
 
-            ++p;
         } else {
 
             ops[idx] = OP_LOAD;
