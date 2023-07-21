@@ -39,6 +39,11 @@ size_t read_points(vec4_t* points, const size_t count)
         if (read_count == 3) {
             temp.w = 1.f;
             points[i++] = temp;
+            
+            if (i == count) {
+                break;
+            }
+            
             read_count = 0;
         }
     }

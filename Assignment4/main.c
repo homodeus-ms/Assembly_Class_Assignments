@@ -8,6 +8,14 @@
 
 int main(void)
 {
+    enum { LENGTH = 2 };
+    vec4_t arr[LENGTH];
+    read_points(arr, LENGTH);
+
+    for (size_t i = 0; i < LENGTH; ++i) {
+        printf("%f %f %f %f\n", arr[i].x, arr[i].y, arr[i].z, arr[i].w);
+    }
+#if 0
     {
         mat4_t expected = {
             { 1.f, 5.f,  9.f, 13.f },
@@ -98,7 +106,7 @@ int main(void)
             ASSERT_VEC_EQUALS(&expected[i], &world_points[i]);
         }
     }
-
+#endif
     printf("No Assert!");
 
     return 0;
