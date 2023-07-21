@@ -12,8 +12,6 @@
 
 size_t read_points(vec4_t* points, const size_t count)
 {
-    enum { LINE_LENGTH = 1024 };
-    char buffer[LINE_LENGTH];
     size_t i = 0;
     size_t read_count = 0;
     vec4_t temp;
@@ -67,19 +65,19 @@ void transpose(mat4_t* mat)
         movaps xmm2,[eax+32]
         movaps xmm3,[eax+48]
 
-        movaps xmm4,xmm0    // mm0: 3 2 1 0   mm1: 7 6 5 4
-        shufps xmm4,xmm1,01000100b    // mm4 : 05 04 01 00
-        shufps xmm0,xmm1,11101110b    // mm0 : 07 06 03 02
+        movaps xmm4,xmm0
+        shufps xmm4,xmm1,01000100b
+        shufps xmm0,xmm1,11101110b
 
-        movaps xmm5,xmm2    // mm2: 11 10 9 8  mm3: 15 14 13 12
-        shufps xmm5,xmm3,01000100b    // mm5 : 13 12 09 08
-        shufps xmm2,xmm3,11101110b    // mm2 : 15 14 11 10
+        movaps xmm5,xmm2
+        shufps xmm5,xmm3,01000100b
+        shufps xmm2,xmm3,11101110b
 
         movaps xmm1,xmm4
-        shufps xmm1,xmm5,10001000b    // xmm1 : 12 08 04 00
+        shufps xmm1,xmm5,10001000b
         movaps [eax],xmm1
 
-        shufps xmm4,xmm5,11011101b    // xmm4: 13 09 05 01
+        shufps xmm4,xmm5,11011101b
         movaps [eax+16],xmm4
 
         movaps xmm3,xmm0
@@ -102,7 +100,7 @@ void transform(vec4_t* dst, const vec4_t* src, const mat4_t* mat_tr)
 
         movaps xmm0,[ebx]
         movaps xmm1,xmm0
-        dpps xmm1,xmm7,0xFF    // xmm0=src , xmm1=dot product
+        dpps xmm1,xmm7,0xFF
 
         movaps xmm7,[eax+16]
         movaps xmm2,xmm0
@@ -184,12 +182,11 @@ void run(vec4_t* world_pts, const vec4_t* local_pts, const size_t count, const v
 
     mat_translation(&mat2, translation->x, translation->y, translation->z);
     transpose(&mat2);
-    concatenate(&mat_res1, &mat_res0, &mat2);   // 변환행렬 합친값 mat_res1에
+    concatenate(&mat_res1, &mat_res0, &mat2);
 
     transpose(&mat_res1);
 
-    for (size_t i = 0; i < count; ++i)
-    {
+    for (size_t i = 0; i < count; ++i) {
         transform(&world_pts[i], &local_pts[i], &mat_res1);
     }
 }
