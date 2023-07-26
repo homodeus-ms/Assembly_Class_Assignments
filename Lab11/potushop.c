@@ -26,7 +26,9 @@ static vector4_t s_brightness = { 0.f, 0.f, 0.f, 1.f };
 static vector4_t s_in_min = { 0.f, 0.f, 0.f, 1.f };
 static vector4_t s_in_max = { 0.f, 0.f, 0.f, 1.f };
 static vector4_t s_out_min = { 0.f, 0.f, 0.f, 1.f };
-static vector4_t s_out_max = { 0.f, 0.f, 0.f, 1.f };
+//static vector4_t s_out_max = { 0.f, 0.f, 0.f, 1.f };
+
+static vector4_t s_ratio = { 0.f, 0.f, 0.f, 1.f };
 
 void set_brightness_arg(int brightness)
 {
@@ -57,8 +59,11 @@ void set_level_args(int in_min, int in_max, int out_min, int out_max)
     temp = out_min / 255.f;
     SET_VALUE(s_out_min, temp);
 
-    temp = out_max / 255.f;
-    SET_VALUE(s_out_max, temp);
+    temp = (out_max - out_min) / (float)(in_max - in_min);
+    SET_VALUE(s_ratio, temp);
+
+    //temp = out_max / 255.f;
+    //SET_VALUE(s_out_max, temp);
 }
 
 void to_grayscale(void)
@@ -163,14 +168,7 @@ void change_levels(void)
         movaps xmm1, s_in_min
         movaps xmm2, s_in_max
         movaps xmm3, s_out_min
-        movaps xmm4, s_out_max
-
-        movaps xmm5, xmm4
-        subps xmm5, xmm3
-
-        movaps xmm6, xmm2
-        subps xmm6, xmm1
-        rcpps xmm6, xmm6
+        movaps xmm4, s_ratio
 
     levelloop:
         mov esi, ecx
@@ -182,8 +180,7 @@ void change_levels(void)
         minps xmm0, xmm2
 
         subps xmm0, xmm1
-        mulps xmm0, xmm5
-        mulps xmm0, xmm6
+        mulps xmm0, xmm4
         addps xmm0, xmm3
 
         movaps g_pixels[esi], xmm0
