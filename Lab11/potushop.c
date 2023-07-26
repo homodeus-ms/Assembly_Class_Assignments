@@ -50,7 +50,7 @@ void set_level_args(int in_min, int in_max, int out_min, int out_max)
 
     float temp = in_min / 255.f;
     SET_VALUE(s_in_min, temp);
-    
+
     temp = in_max / 255.f;
     SET_VALUE(s_in_max, temp);
 
@@ -170,6 +170,7 @@ void change_levels(void)
 
         movaps xmm6, xmm2
         subps xmm6, xmm1
+        rcpps xmm6, xmm6
 
     levelloop:
         mov esi, ecx
@@ -182,7 +183,7 @@ void change_levels(void)
 
         subps xmm0, xmm1
         mulps xmm0, xmm5
-        divps xmm0, xmm6
+        mulps xmm0, xmm6
         addps xmm0, xmm3
 
         movaps g_pixels[esi], xmm0
